@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* User Requested Cinematic Dark Luxury Palette */
+    --background: 240 12% 5%;
+    /* #0B0B0E */
+    --foreground: 0 0% 100%;
+    /* #FFFFFF */
+
+    --card: 240 14% 8%;
+    /* Surface #121218 */
+    --card-foreground: 0 0% 100%;
+
+    --popover: 240 14% 8%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 39 48% 57%;
+    /* Luxury Gold #C6A15B */
+    --primary-foreground: 240 12% 5%;
+
+    --secondary: 240 14% 8%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 14% 8%;
+    --muted-foreground: 240 5% 65%;
+    /* #A1A1AA */
+
+    --accent: 39 48% 57%;
+    --accent-foreground: 240 12% 5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 12% 13%;
+    /* #1E1E26 */
+    --input: 240 12% 13%;
+    --ring: 39 48% 57%;
+
+    --radius: 0.5rem;
+
+    --surface: 240 14% 8%;
+    /* #121218 */
+
+    --sidebar-background: 240 12% 5%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 39 48% 57%;
+    --sidebar-primary-foreground: 240 12% 5%;
+    --sidebar-accent: 240 14% 8%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 12% 13%;
+    --sidebar-ring: 39 48% 57%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+}
+
+@layer components {
+  .text-gold-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(40 45% 56%), hsl(40 60% 70%), hsl(40 45% 56%));
+  }
+
+  .border-gold-gradient {
+    border-image: linear-gradient(135deg, hsl(40 45% 56%), hsl(40 60% 70%)) 1;
+  }
+
+  .cinematic-overlay {
+    background: linear-gradient(180deg,
+        hsla(240, 10%, 4%, 0.3) 0%,
+        hsla(240, 10%, 4%, 0.1) 40%,
+        hsla(240, 10%, 4%, 0.5) 80%,
+        hsla(240, 10%, 4%, 0.85) 100%);
+  }
+
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-24 py-24 md:py-32 lg:py-40;
+  }
+
+  .luxury-divider {
+    @apply w-16 h-px bg-primary mx-auto;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .tracking-luxury {
+    letter-spacing: 0.08em;
+  }
+
+  .tracking-editorial {
+    letter-spacing: 0.08em;
+  }
+}
+
+/* 5. GLOBAL SMOOTH SCROLL (Lenis Recommended CSS) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* 3. GOLD MICRO-INTERACTIONS */
+@layer base {
+
+  a,
+  button {
+    @apply transition-colors duration-300;
+  }
+
+  a:hover,
+  button:hover {
+    color: #C6A15B;
+    border-color: #C6A15B;
+  }
+}
