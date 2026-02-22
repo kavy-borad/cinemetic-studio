@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, Check, ShieldCheck, Clock, Users, Star } from "l
 import { z } from "zod";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useSubmitQuotation } from "@/hooks/useQuotation";
 
 const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Baby Shower", "Birthday", "Corporate", "Other"];
 const serviceOptions = [
@@ -95,6 +96,7 @@ const Quote = () => {
   const totalSteps = 4;
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { mutateAsync: postQuotation } = useSubmitQuotation();
 
   const validateStep = (currentStep: number) => {
     const newErrors: Record<string, string> = {};
@@ -115,13 +117,34 @@ const Quote = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // POST to backend (non-blocking - PDF still generates on error)
+    try {
+      await postQuotation({
+        name: data.name,
+        email: data.email || undefined,
+        phone: data.phone,
+        city: data.city || undefined,
+        eventType: data.eventType || undefined,
+        eventDate: data.eventDate || undefined,
+        venue: data.venue || undefined,
+        guestCount: data.guestCount || undefined,
+        functions: data.functions || undefined,
+        servicesRequested: data.services.length > 0 ? data.services : undefined,
+        budget: data.budget || undefined,
+        requirements: data.requirements || undefined,
+      });
+      toast.success("Consultation request received.", {
+        duration: 5000,
+        className: "bg-background border-primary text-foreground"
+      });
+    } catch {
+      toast.error("Could not save your request online, but your PDF quote is ready.", {
+        duration: 5000,
+      });
+    }
+
     setIsSubmitted(true);
-    toast.success("Consultation request received.", {
-      duration: 5000,
-      className: "bg-background border-primary text-foreground"
-    });
-    console.log("Form Data Submitted:", data);
 
     // --------------------------------------------------------------------------
     // GENERATE ENTERPRISE LEVEL PDF QUOTATION (PIXEL STUDIO)

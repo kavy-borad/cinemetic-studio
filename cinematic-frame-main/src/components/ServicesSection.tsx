@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useServices } from "@/hooks/useServices";
 
-const services = [
+const FALLBACK_SERVICES = [
     "Wedding Photography",
     "Engagement",
     "Cinematic Films",
@@ -11,6 +12,11 @@ const services = [
 const ServicesSection = () => {
     const { ref, isVisible } = useScrollReveal();
     const navigate = useNavigate();
+    const { data: apiServices } = useServices();
+
+    const services = (apiServices && apiServices.length > 0)
+        ? apiServices.slice(0, 4).map((s) => s.name)
+        : FALLBACK_SERVICES;
 
     return (
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 bg-surface/30">

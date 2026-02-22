@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { CinematicLightbox } from "@/components/CinematicLightbox";
 import { getCategoryImages, categoryImages } from "@/data/portfolio";
 import { CinematicFrame } from "@/components/CinematicFrame";
+import { usePortfolioBySlug } from "@/hooks/usePortfolio";
 
 const Album = () => {
     const { slug } = useParams();
@@ -17,7 +18,10 @@ const Album = () => {
     const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start end", "end start"] });
     const y = useTransform(scrollYProgress, [0, 1], [0, 100]); // Parallax for hero
 
-    // Determine category from slug
+    // Fetch portfolio from API by slug
+    const { data: portfolio } = usePortfolioBySlug(slug);
+
+    // Determine category from slug (for static fallback)
     let categoryKey = "wedding";
     if (slug) {
         const keys = Object.keys(categoryImages);
@@ -28,16 +32,21 @@ const Album = () => {
 
     const baseImages = getCategoryImages(categoryKey);
 
-    // Generate album images
-    const images = Array.from({ length: 15 }).map((_, i) => ({
+    // Use API images when available, otherwise fall back to static data
+    const apiImages = portfolio?.images ?? [];
+    const sourceImages = apiImages.length > 0 ? apiImages : baseImages;
+    const images = Array.from({ length: Math.max(15, sourceImages.length) }).map((_, i) => ({
         id: i,
-        src: baseImages[i % baseImages.length],
-        alt: `${categoryKey} Photo ${i + 1}`,
-        // Randomize aspect ratios for masonry feel
+        src: sourceImages[i % sourceImages.length],
+        alt: `${portfolio?.title ?? categoryKey} Photo ${i + 1}`,
         aspect: i % 3 === 0 ? "aspect-[4/3]" : i % 2 === 0 ? "aspect-[3/4]" : "aspect-square"
     }));
 
-    const albumTitle = slug?.replace(/-/g, " ") || "Album Title";
+    const albumTitle = portfolio?.title ?? slug?.replace(/-/g, " ") ?? "Album Title";
+    const albumLocation = portfolio?.clientName ?? "India";
+    const albumDate = portfolio?.eventDate
+        ? new Date(portfolio.eventDate).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })
+        : "2025";
 
     // Keyboard navigation
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -91,9 +100,9 @@ const Album = () => {
                             {albumTitle}
                         </h1>
                         <div className="flex items-center justify-center gap-6 text-white/60 text-sm tracking-widest font-light uppercase">
-                            <span>Paris, France</span>
+                            <span>{albumLocation}</span>
                             <span className="w-1 h-1 bg-[#C6A15B] rounded-full" />
-                            <span>October 12, 2025</span>
+                            <span>{albumDate}</span>
                         </div>
                     </motion.div>
                 </div>

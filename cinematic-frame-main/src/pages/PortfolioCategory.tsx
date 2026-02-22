@@ -7,6 +7,7 @@ import { getCategoryImages } from "@/data/portfolio";
 import { useRef } from "react";
 import { CinematicFrame } from "@/components/CinematicFrame";
 import PlaceholderImage from "@/components/PlaceholderImage";
+import { usePortfolios } from "@/hooks/usePortfolio";
 
 // Album Card for Masonry Grid
 const AlbumCard = ({
@@ -71,16 +72,28 @@ const PortfolioCategory = () => {
 
     const displayCategory = category?.replace(/-/g, " ") || "Category";
     const selectedImages = getCategoryImages(category);
+    const { data: apiPortfolios } = usePortfolios(category);
 
-    // Mock Album Data (using category images)
-    const albums = Array.from({ length: 9 }).map((_, i) => ({
-        id: i,
-        src: selectedImages[i % selectedImages.length],
-        slug: `${category}-album-${i}`,
-        title: `${displayCategory} Collection ${i + 1}`,
-        location: ["Paris, France", "Santorini, Greece", "Kyoto, Japan", "Lake Como, Italy"][i % 4],
-        date: ["Oct 2025", "Sep 2025", "Aug 2025", "July 2025"][i % 4]
-    }));
+    // Use API data when available, otherwise fall back to mock albums
+    const albums = (apiPortfolios && apiPortfolios.length > 0)
+        ? apiPortfolios.map((p, i) => ({
+            id: p.id,
+            src: p.coverImage || selectedImages[i % selectedImages.length],
+            slug: p.slug,
+            title: p.title,
+            location: p.clientName || "Ahmedabad, India",
+            date: p.eventDate
+                ? new Date(p.eventDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })
+                : "2025",
+          }))
+        : Array.from({ length: 9 }).map((_, i) => ({
+            id: i,
+            src: selectedImages[i % selectedImages.length],
+            slug: `${category}-album-${i}`,
+            title: `${displayCategory} Collection ${i + 1}`,
+            location: ["Paris, France", "Santorini, Greece", "Kyoto, Japan", "Lake Como, Italy"][i % 4],
+            date: ["Oct 2025", "Sep 2025", "Aug 2025", "July 2025"][i % 4]
+          }));
 
     return (
         <main className="min-h-screen bg-[#0B0B0E] relative">

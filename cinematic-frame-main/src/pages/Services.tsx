@@ -4,7 +4,18 @@ import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useSpring, useInView, useMotionValue, AnimatePresence } from "framer-motion";
-import { Camera, Video, Plane, BookOpen, Radio, Sparkles, ArrowRight } from "lucide-react";
+import { Camera, Video, Plane, BookOpen, Radio, Sparkles, ArrowRight, type LucideIcon } from "lucide-react";
+import { useServices } from "@/hooks/useServices";
+
+// Map backend icon name strings to Lucide icon components
+const ICON_MAP: Record<string, LucideIcon> = {
+  Camera,
+  Video,
+  Plane,
+  BookOpen,
+  Radio,
+  Sparkles,
+};
 
 const mainServices = [
   {
@@ -297,6 +308,17 @@ const Services = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [activeFeature, setActiveFeature] = useState(0);
 
+  // Fetch services from backend; fall back to static data when API is empty
+  const { data: apiServices } = useServices();
+  const displayServices = (apiServices && apiServices.length > 0)
+    ? apiServices.map((svc, i) => ({
+        title: svc.name,
+        description: svc.description,
+        icon: ICON_MAP[svc.icon] ?? mainServices[i % mainServices.length].icon,
+        bgImage: mainServices[i % mainServices.length].bgImage,
+      }))
+    : mainServices;
+
   const { scrollYProgress } = useScroll({
     target: parallaxRef,
     offset: ["start end", "end start"]
@@ -357,7 +379,7 @@ const Services = () => {
       <section className="px-6 md:px-12 lg:px-24 pb-32">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mainServices.map((service, index) => (
+            {displayServices.map((service, index) => (
               <ServiceCard
                 key={index}
                 service={service}
