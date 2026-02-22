@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
               initial={{ opacity: 0, x: 20 }} // Slide from right
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }} // Slide to left
-              transition={{ duration: 0.5, ease: "circOut" }}
+              transition={{duration: 0.2, ease: "circOut" }}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.2}

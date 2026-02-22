@@ -91,7 +91,7 @@ const Album = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{duration: 0.3, ease: "easeOut" }}
                     >
                         <p className="text-[#C6A15B] text-xs font-medium tracking-editorial uppercase mb-6">
                             Est. 2025
@@ -117,7 +117,7 @@ const Album = () => {
                             initial={{ opacity: 0, y: 60 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "0px" }}
-                            transition={{ duration: 0.8, delay: (index % 3) * 0.1 }}
+                            transition={{duration: 0.3, delay: (index % 3) * 0.1 }}
                             className="break-inside-avoid relative mb-8"
                             onClick={() => setSelectedImage(index)}
                         >

@@ -141,7 +141,7 @@ export const CinematicPhoto: React.FC<CinematicPhotoProps> = ({
                         : "0 10px 30px rgba(0,0,0,0.35)",
                 }}
                 transition={{
-                    boxShadow: { duration: 0.5, ease: "easeOut" }
+                    boxShadow: {duration: 0.2, ease: "easeOut" }
                 }}
             >
                 {/* Image Load Effect Wrapper */}

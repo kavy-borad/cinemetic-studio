@@ -355,13 +355,13 @@ const Services = () => {
           ref={ref}
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{duration: 0.3, ease: "easeOut" }}
           className="max-w-4xl mx-auto space-y-6"
         >
           <motion.span
             initial={{ letterSpacing: "0.3em" }}
             animate={{ letterSpacing: "0.2em" }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{duration: 0.3, ease: "easeOut" }}
             className="text-[#C6A15B] text-xs font-medium uppercase block font-body"
           >
             What We Offer
@@ -426,7 +426,7 @@ const Services = () => {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{duration: 0.3 }}
             >
               <h2 className="text-[#C6A15B] font-body text-sm tracking-[0.3em] uppercase mb-4">
                 The Pixel Experience
@@ -451,7 +451,7 @@ const Services = () => {
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{duration: 0.2, delay: index * 0.1 }}
                 onMouseEnter={() => setActiveFeature(index)}
                 className={`group relative p-6 cursor-pointer border-l-2 transition-all duration-500 ${activeFeature === index
                   ? "border-[#C6A15B] bg-white/5"

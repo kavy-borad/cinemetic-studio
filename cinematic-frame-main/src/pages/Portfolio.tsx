@@ -99,7 +99,7 @@ const Portfolio = () => {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{duration: 0.3, ease: "easeOut" }}
           className="max-w-5xl mx-auto flex flex-col items-center"
         >
           <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
@@ -116,7 +116,7 @@ const Portfolio = () => {
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "100px" }}
-            transition={{ duration: 1.2, delay: 0.5, ease: "circOut" }}
+            transition={{duration: 0.3, delay: 0.5, ease: "circOut" }}
             className="h-px bg-[#C6A15B] opacity-60"
           />
         </motion.div>

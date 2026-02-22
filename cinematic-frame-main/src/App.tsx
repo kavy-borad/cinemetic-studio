@@ -40,7 +40,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <MotionConfig reducedMotion="always">
+      <MotionConfig>
         <BrowserRouter>
           <SmoothScroll>
             <AppRoutes />

@@ -40,7 +40,7 @@ const Contact = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
                     className="relative z-20 max-w-4xl mx-auto px-6 mt-20"
                 >
                     <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-white mb-6 tracking-tight">
@@ -98,7 +98,7 @@ const Contact = () => {
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.3 }}
                         className="space-y-8"
                     >
                         <h2 className="font-heading text-4xl md:text-5xl text-foreground">

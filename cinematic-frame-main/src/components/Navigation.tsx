@@ -35,7 +35,7 @@ const Navigation = ({ activePath }: NavigationProps) => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled
         ? "bg-background/90 backdrop-blur-md border-b border-border"
         : "bg-gradient-to-b from-black/80 via-black/40 to-transparent"
@@ -89,7 +89,7 @@ const Navigation = ({ activePath }: NavigationProps) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="md:hidden bg-background/95 backdrop-blur-md border-b border-border overflow-hidden"
           >
             <div className="flex flex-col items-center gap-6 py-8">

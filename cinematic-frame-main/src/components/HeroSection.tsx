@@ -78,7 +78,7 @@ const HeroSection = React.memo(() => {
               initial={{ scale: 1.05, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.05, opacity: 0 }}
-              transition={{ duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] }}
+              transition={{ duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
               className="absolute inset-0"
             >
               <img
@@ -105,7 +105,7 @@ const HeroSection = React.memo(() => {
             style={{ y: textY }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
             className="text-left pointer-events-auto max-w-3xl"
           >
             <p className="text-xs tracking-luxury uppercase text-primary font-body mb-4 drop-shadow-lg">

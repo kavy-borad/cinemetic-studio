@@ -11,7 +11,7 @@ const CategoryCard = ({ title, slug, image, index }: { title: string; slug: stri
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{
-        duration: 0.8,
+       duration: 0.3,
         ease: "easeOut",
         delay: index * 0.15,
       }}
