@@ -1,8 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowDown } from "lucide-react";
-import PlaceholderImage from "./PlaceholderImage";
 
 const slides = [
   {
@@ -32,7 +30,7 @@ const slides = [
   },
 ];
 
-const HeroSection = () => {
+const HeroSection = React.memo(() => {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
@@ -56,12 +54,15 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, [isPaused, next]);
 
+  const handleMouseEnter = useCallback(() => setIsPaused(true), []);
+  const handleMouseLeave = useCallback(() => setIsPaused(false), []);
+
   return (
     <section
       ref={containerRef}
       className="relative h-screen w-full bg-black overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <motion.div
         style={{
@@ -84,7 +85,8 @@ const HeroSection = () => {
                 src={slides[current].src}
                 alt={slides[current].alt}
                 className={`w-full h-full object-cover ${slides[current].position}`}
-                loading="eager"
+                loading={current === 0 ? "eager" : "lazy"}
+                decoding="async"
               />
               {/* Vignette for cinematic look */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
@@ -119,7 +121,7 @@ const HeroSection = () => {
             </p>
             <Link
               to="/quote"
-              className="inline-block bg-transparent border border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(198,161,91,0.3)] hover:scale-[1.02] backdrop-blur-sm"
+              className="inline-block bg-transparent border border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:scale-[1.02]"
             >
               Get Your Quote
             </Link>
@@ -157,6 +159,6 @@ const HeroSection = () => {
       </motion.div>
     </section>
   );
-};
+});
 
 export default HeroSection;

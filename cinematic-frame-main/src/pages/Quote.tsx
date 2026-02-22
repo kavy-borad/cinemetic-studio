@@ -113,7 +113,7 @@ const Quote = () => {
   const handleNext = () => {
     if (validateStep(step)) {
       setStep(step + 1);
-      window.scrollTo({ top: 400, behavior: 'smooth' });
+      window.scrollTo({ top: 400, behavior: 'auto' });
     }
   };
 
@@ -416,7 +416,7 @@ const Quote = () => {
       reset();
       setStep(1);
       setIsSubmitted(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
     }, 5000);
   };
 
@@ -655,7 +655,7 @@ const Quote = () => {
                 onClick={() => {
                   if (step > 1) {
                     setStep(step - 1);
-                    window.scrollTo({ top: 400, behavior: 'smooth' });
+                    window.scrollTo({ top: 400, behavior: 'auto' });
                   }
                 }}
                 className={`text-sm tracking-editorial uppercase font-body text-muted-foreground hover:text-white transition-colors duration-300 flex items-center gap-2 ${step === 1 ? "opacity-0 pointer-events-none" : ""}`}

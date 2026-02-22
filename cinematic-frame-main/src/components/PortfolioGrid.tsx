@@ -49,14 +49,15 @@ const PortfolioGrid = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-24"
+          className="text-center mb-24 flex flex-col items-center"
         >
-          <p className="text-xs tracking-editorial uppercase text-[#C6A15B] font-body mb-4 font-medium">
+          <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
             Portfolio
-          </p>
-          <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground">
-            Selected Works
           </h2>
+          <p className="text-white/60 font-body text-base md:text-lg mb-6">
+            Where Memories Become Timeless
+          </p>
+          <div className="w-12 h-[1px] bg-[#C6A15B]" />
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">

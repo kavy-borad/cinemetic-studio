@@ -4,18 +4,7 @@ import Footer from "@/components/Footer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useSpring, useInView, useMotionValue, AnimatePresence } from "framer-motion";
-import { Camera, Video, Plane, BookOpen, Radio, Sparkles, ArrowRight, type LucideIcon } from "lucide-react";
-import { useServices } from "@/hooks/useServices";
-
-// Map backend icon name strings to Lucide icon components
-const ICON_MAP: Record<string, LucideIcon> = {
-  Camera,
-  Video,
-  Plane,
-  BookOpen,
-  Radio,
-  Sparkles,
-};
+import { Camera, Video, Plane, BookOpen, Radio, Sparkles, ArrowRight, Clock, Film, Smartphone, HardDrive, Mic, RefreshCw } from "lucide-react";
 
 const mainServices = [
   {
@@ -56,50 +45,75 @@ const mainServices = [
   }
 ];
 
-const premiumAddOns = [
+const signatureEnhancements = [
   {
-    title: "Drone",
-    image: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=600&q=80"
+    title: "Same Day Edit (SDE)",
+    description: "Wedding highlights edited and presented on the same day.",
+    icon: Clock,
+    image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80"
   },
   {
-    title: "Album",
-    image: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80"
+    title: "Cinematic Trailer",
+    description: "1–2 minute dramatic wedding teaser with cinematic storytelling.",
+    icon: Film,
+    image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=800&q=80"
   },
   {
-    title: "Same Day Edit",
-    image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=600&q=80"
+    title: "Instagram Reels Pack",
+    description: "3–5 vertical reels optimized for social media sharing.",
+    icon: Smartphone,
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80"
   },
   {
-    title: "Pre-Wedding",
-    image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80"
+    title: "Full Raw Footage",
+    description: "Complete unedited photos and videos in high quality.",
+    icon: HardDrive,
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Couple Interview Film",
+    description: "A beautifully shot love story interview with cinematic visuals.",
+    icon: Mic,
+    image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "360° Video Booth",
+    description: "Dynamic rotating slow-motion booth for fun wedding moments.",
+    icon: RefreshCw,
+    image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
 const coverageFeatures = [
   {
-    title: "Photography",
-    description: "Capturing every tear and smile.",
+    title: "Artistic Vision",
+    description: "Crafting visually stunning and emotionally resonant narratives.",
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80"
   },
   {
-    title: "Cinematic Films",
-    description: "Your love story in motion.",
+    title: "Multi-Camera Setup",
+    description: "Comprehensive coverage from multiple dynamic angles.",
     image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=2000&q=80"
   },
   {
-    title: "Drone Coverage",
-    description: "Breathtaking aerial perspectives.",
+    title: "High-End Equipment",
+    description: "Utilizing industry-leading gear for cinematic quality.",
     image: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=2000&q=80"
   },
   {
-    title: "Fine Art Albums",
-    description: "Handcrafted heirlooms.",
+    title: "Creative Direction",
+    description: "Guided posing and scenario planning for perfect shots.",
     image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=2000&q=80"
   },
   {
-    title: "Live Streaming",
-    description: "Sharing the moment globally.",
+    title: "Seamless Editing Workflow",
+    description: "Meticulous post-production for flawless final delivery.",
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=2000&q=80"
+  },
+  {
+    title: "Timely Delivery",
+    description: "Prompt and reliable turnover of your precious memories.",
+    image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=2000&q=80"
   }
 ];
 
@@ -308,17 +322,6 @@ const Services = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [activeFeature, setActiveFeature] = useState(0);
 
-  // Fetch services from backend; fall back to static data when API is empty
-  const { data: apiServices } = useServices();
-  const displayServices = (apiServices && apiServices.length > 0)
-    ? apiServices.map((svc, i) => ({
-        title: svc.name,
-        description: svc.description,
-        icon: ICON_MAP[svc.icon] ?? mainServices[i % mainServices.length].icon,
-        bgImage: mainServices[i % mainServices.length].bgImage,
-      }))
-    : mainServices;
-
   const { scrollYProgress } = useScroll({
     target: parallaxRef,
     offset: ["start end", "end start"]
@@ -379,7 +382,7 @@ const Services = () => {
       <section className="px-6 md:px-12 lg:px-24 pb-32">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayServices.map((service, index) => (
+            {mainServices.map((service, index) => (
               <ServiceCard
                 key={index}
                 service={service}
@@ -426,16 +429,16 @@ const Services = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-[#C6A15B] font-body text-sm tracking-[0.3em] uppercase mb-4">
-                Full Spectrum
+                The Pixel Experience
               </h2>
               <h3 className="font-heading text-6xl md:text-8xl text-white leading-[0.9] mb-6">
-                Complete <br />
+                The Pixel <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C6A15B] to-[#E5D5A6]">
-                  Coverage.
+                  Experience.
                 </span>
               </h3>
               <p className="text-white/70 font-body font-light text-xl max-w-md leading-relaxed">
-                We don't just capture moments; we curate memories. Experience a seamless blend of technical precision and artistic vision.
+                We don't just capture moments; we curate memories. Experience a seamless blend of technical precision and artistic vision that ensures every detail of your event is preserved elegantly.
               </p>
             </motion.div>
           </div>
@@ -492,34 +495,74 @@ const Services = () => {
         </div>
       </section>
 
-      {/* SECTION 4 – PREMIUM ADD-ONS */}
-      <section className="px-6 md:px-12 lg:px-24 pb-32">
+      {/* SECTION 4 – SIGNATURE ENHANCEMENTS */}
+      <section className="px-6 md:px-12 lg:px-24 pt-32 pb-16 bg-[#050505]">
         <div className="max-w-7xl mx-auto">
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl font-heading text-center text-foreground mb-12"
+            className="text-center mb-16"
           >
-            Premium Add-Ons
-          </motion.h2>
+            <h2 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
+              Signature Enhancements
+            </h2>
+            <p className="text-white/60 font-body text-lg max-w-2xl mx-auto">
+              Elevate your wedding experience with exclusive add-on services.
+            </p>
+          </motion.div>
 
-          <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
-            {premiumAddOns.map((addon, index) => (
-              <TiltCard key={index} addon={addon} index={index} />
-            ))}
+          {/* 2 Column Grid for Enhancements */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {signatureEnhancements.map((enhancement, index) => {
+              const Icon = enhancement.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="group relative h-80 md:h-[350px] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-[0_20px_60px_rgba(198,161,91,0.2)] hover:-translate-y-2 hover:border-[#C6A15B]/50 cursor-pointer"
+                >
+                  <img
+                    src={enhancement.image}
+                    alt={enhancement.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-80"
+                  />
+
+                  {/* Gradient Overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+
+                  {/* Content Container */}
+                  <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end z-10 transition-transform duration-500 transform group-hover:-translate-y-2">
+                    <div className="bg-black/30 backdrop-blur-md w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:border-[#C6A15B]/80 group-hover:bg-[#C6A15B]/20 transition-all duration-500">
+                      <Icon className="text-white group-hover:text-[#C6A15B] transition-colors duration-500" size={20} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-heading text-white mb-3 group-hover:text-[#C6A15B] transition-colors duration-400">
+                        {enhancement.title}
+                      </h3>
+                      <p className="text-white/70 font-body text-base font-light leading-relaxed group-hover:text-white transition-colors duration-400">
+                        {enhancement.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* SECTION 5 – TRUST BLOCK with Counter */}
-      <section className="px-6 md:px-12 lg:px-24 pb-32">
+      <section className="px-6 md:px-12 lg:px-24 pb-24 bg-[#050505]">
         <motion.div
-          initial={{ opacity: 0, y: 80 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto"
+          className="max-w-5xl mx-auto border-t border-white/5 pt-12"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div>
@@ -545,7 +588,7 @@ const Services = () => {
       </section>
 
       {/* SECTION 6 – CONVERSION CTA */}
-      <section className="px-6 md:px-12 lg:px-24 pb-40">
+      <section className="px-6 md:px-12 lg:px-24 py-32">
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
