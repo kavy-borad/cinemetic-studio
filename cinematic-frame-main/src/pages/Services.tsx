@@ -190,7 +190,7 @@ const ServiceCard = ({ service, index, onHover, onLeave }: any) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.12 }}
+      transition={{ duration: 0.18, delay: index * 0.12 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
@@ -286,7 +286,7 @@ const TiltCard = ({ addon, index }: { addon: any, index: number }) => {
           alt={addon.title}
           className="w-full h-full object-cover"
           whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.18 }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
@@ -355,13 +355,13 @@ const Services = () => {
           ref={ref}
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{duration: 0.3, ease: "easeOut" }}
+          transition={{duration: 0.1, ease: "easeOut" }}
           className="max-w-4xl mx-auto space-y-6"
         >
           <motion.span
             initial={{ letterSpacing: "0.3em" }}
             animate={{ letterSpacing: "0.2em" }}
-            transition={{duration: 0.3, ease: "easeOut" }}
+            transition={{duration: 0.1, ease: "easeOut" }}
             className="text-[#C6A15B] text-xs font-medium uppercase block font-body"
           >
             What We Offer
@@ -405,7 +405,7 @@ const Services = () => {
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.21 }}
               className="absolute inset-0 w-full h-full"
             >
               <img
@@ -426,7 +426,7 @@ const Services = () => {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{duration: 0.3 }}
+              transition={{duration: 0.1 }}
             >
               <h2 className="text-[#C6A15B] font-body text-sm tracking-[0.3em] uppercase mb-4">
                 The Pixel Experience
@@ -451,7 +451,7 @@ const Services = () => {
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{duration: 0.2, delay: index * 0.1 }}
+                transition={{duration: 0.1, delay: index * 0.1 }}
                 onMouseEnter={() => setActiveFeature(index)}
                 className={`group relative p-6 cursor-pointer border-l-2 transition-all duration-500 ${activeFeature === index
                   ? "border-[#C6A15B] bg-white/5"
@@ -522,7 +522,7 @@ const Services = () => {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  transition={{ delay: index * 0.1, duration: 0.18 }}
                   className="group relative h-80 md:h-[350px] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-[0_20px_60px_rgba(198,161,91,0.2)] hover:-translate-y-2 hover:border-[#C6A15B]/50 cursor-pointer"
                 >
                   <img
@@ -561,7 +561,7 @@ const Services = () => {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.24 }}
           className="max-w-5xl mx-auto border-t border-white/5 pt-12"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
@@ -593,7 +593,7 @@ const Services = () => {
           initial={{ opacity: 0, y: 80 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.24 }}
           whileHover={{ scale: 1.01 }}
           className="max-w-4xl mx-auto rounded-2xl p-16 md:p-20 text-center border border-[#1E1E26]"
           style={{

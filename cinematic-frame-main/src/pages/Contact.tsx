@@ -5,12 +5,6 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
-const PinterestIcon = ({ size = 22, className = "", strokeWidth = 1.5 }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M12 2C6.5 2 2 6.5 2 12c0 4.3 2.7 8 6.6 9.3-.1-1-.2-2.3 0-3.4.2-.9 1.4-5.9 1.4-5.9s-.4-.7-.4-1.8c0-1.7 1-3 2.2-3 1.1 0 1.6.8 1.6 1.8 0 1.1-.7 2.7-1.1 4.2-.3 1.3.7 2.3 1.9 2.3 2.3 0 4.1-2.4 4.1-5.9 0-3.1-2.2-5.3-5.4-5.3-3.7 0-5.8 2.7-5.8 5.6 0 1.1.4 2.2 1 2.8.1.1.1.3 0 .4-.1.4-.3 1.2-.4 1.4-.1.2-.3.2-.5.1-1.7-.8-2.8-3.2-2.8-5.2 0-4.2 3.1-8.1 8.8-8.1 4.6 0 8.2 3.3 8.2 7.7 0 4.6-2.9 8.3-6.9 8.3-1.3 0-2.6-.7-3-1.5l-.8 3.1c-.3 1.1-1.1 2.5-1.6 3.4 1 .3 2.1.5 3.3.5 5.5 0 10-4.5 10-10C22 6.5 17.5 2 12 2z" />
-    </svg>
-);
-
 const Contact = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -40,7 +34,7 @@ const Contact = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    transition={{ duration: 0.1, ease: "easeOut" }}
                     className="relative z-20 max-w-4xl mx-auto px-6 mt-20"
                 >
                     <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-white mb-6 tracking-tight">
@@ -98,7 +92,7 @@ const Contact = () => {
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.1 }}
                         className="space-y-8"
                     >
                         <h2 className="font-heading text-4xl md:text-5xl text-foreground">
@@ -128,7 +122,7 @@ const Contact = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ duration: 0.24 }}
                         className="w-full h-[400px] md:h-[500px] rounded-[20px] overflow-hidden border border-white/5 grayscale hover:grayscale-0 transition-all duration-700 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                     >
                         <iframe
@@ -150,7 +144,7 @@ const Contact = () => {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.24 }}
                     className="max-w-7xl mx-auto relative rounded-[20px] overflow-hidden group"
                 >
                     <div className="absolute inset-0 z-0">
@@ -172,43 +166,6 @@ const Contact = () => {
                         </div>
                     </div>
                 </motion.div>
-            </section>
-
-            {/* SECTION 5 – Social Presence */}
-            <section className="py-20 bg-[#0A0A0A]">
-                <div className="max-w-4xl mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="space-y-8"
-                    >
-                        <h3 className="font-heading text-3xl text-white mb-2">Follow our latest work & stories</h3>
-                        <div className="w-16 h-[1px] bg-[#C6A15B]/50 mx-auto mb-10" />
-
-                        <div className="flex justify-center flex-wrap gap-6">
-                            {[
-                                { icon: Instagram, label: "Instagram", link: "#" },
-                                { icon: Youtube, label: "Youtube", link: "#" },
-                                { icon: PinterestIcon, label: "Pinterest", link: "#" }
-                            ].map((social, idx) => (
-                                <a
-                                    key={idx}
-                                    href={social.link}
-                                    className="group flex flex-col items-center gap-4 text-white/50 hover:text-white transition-colors duration-300"
-                                >
-                                    <div className="w-16 h-16 rounded-full border border-white/10 bg-white/[0.02] flex items-center justify-center group-hover:border-[#C6A15B] group-hover:shadow-[0_0_20px_rgba(198,161,91,0.2)] transition-all duration-300 group-hover:scale-[1.03]">
-                                        <social.icon size={22} className="group-hover:text-[#C6A15B] transition-colors duration-300" strokeWidth={1.5} />
-                                    </div>
-                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase">
-                                        {social.label}
-                                    </span>
-                                </a>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
             </section>
 
             <Footer />

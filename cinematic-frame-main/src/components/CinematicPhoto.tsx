@@ -141,7 +141,7 @@ export const CinematicPhoto: React.FC<CinematicPhotoProps> = ({
                         : "0 10px 30px rgba(0,0,0,0.35)",
                 }}
                 transition={{
-                    boxShadow: {duration: 0.2, ease: "easeOut" }
+                    boxShadow: {duration: 0.1, ease: "easeOut" }
                 }}
             >
                 {/* Image Load Effect Wrapper */}
@@ -154,7 +154,7 @@ export const CinematicPhoto: React.FC<CinematicPhotoProps> = ({
                             scale: isLoaded ? (isHovered ? 1.04 : 1) : 1.05,
                             filter: isLoaded ? "blur(0px)" : "blur(20px)",
                         }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
                     >
                         {src.startsWith("http") || src.startsWith("/") ? (
                             <img
@@ -182,7 +182,7 @@ export const CinematicPhoto: React.FC<CinematicPhotoProps> = ({
                             x: isHovered ? "100%" : "-100%"
                         }}
                         transition={{
-                            duration: 0.6,
+                            duration: 0.18,
                             ease: "easeInOut"
                         }}
                     />

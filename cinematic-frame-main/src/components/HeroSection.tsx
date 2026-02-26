@@ -78,7 +78,7 @@ const HeroSection = React.memo(() => {
               initial={{ scale: 1.05, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.05, opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.43, 0.13, 0.23, 0.96] }}
+              transition={{ duration: 0.1, ease: [0.43, 0.13, 0.23, 0.96] }}
               className="absolute inset-0"
             >
               <img
@@ -105,7 +105,7 @@ const HeroSection = React.memo(() => {
             style={{ y: textY }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.1, delay: 0.06, ease: "easeOut" }}
             className="text-left pointer-events-auto max-w-3xl"
           >
             <p className="text-xs tracking-luxury uppercase text-primary font-body mb-4 drop-shadow-lg">
@@ -144,13 +144,13 @@ const HeroSection = React.memo(() => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
           className="absolute bottom-10 right-10 z-20 hidden md:flex flex-col items-center gap-4"
         >
           <span className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-light">Scroll</span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
             className="w-px h-12 bg-gradient-to-b from-white/0 via-white/50 to-white/0 relative flex items-end justify-center"
           >
             <div className="w-1 h-1 bg-primary rounded-full absolute bottom-0 shadow-[0_0_10px_#C6A15B]" />

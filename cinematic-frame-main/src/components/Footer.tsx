@@ -38,7 +38,6 @@ const Footer = () => {
                   { label: "Portfolio", path: "/portfolio" },
                   { label: "Services", path: "/services" },
                   { label: "About Us", path: "/about" },
-                  { label: "Journal", path: "/journal" },
                   { label: "Contact", path: "/contact" },
                 ].map((link) => (
                   <li key={link.label}>
@@ -65,9 +64,9 @@ const Footer = () => {
                   "Destination",
                 ].map((service) => (
                   <li key={service}>
-                    <span className="text-white/60 hover:text-white transition-colors duration-300 text-sm font-body font-light cursor-default">
+                    <Link to="/services" className="text-white/60 hover:text-white hover:translate-x-2 transition-all duration-300 text-sm font-body font-light block w-fit cursor-pointer">
                       {service}
-                    </span>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -78,17 +77,17 @@ const Footer = () => {
               <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-[#C6A15B] mb-8">Social</h4>
               <ul className="space-y-4">
                 {[
-                  { label: "Instagram", icon: Instagram },
-                  { label: "Facebook", icon: Facebook },
-                  { label: "Youtube", icon: Youtube },
-                  { label: "Twitter", icon: Twitter },
+                  { label: "Instagram", icon: Instagram, colorClass: "group-hover:text-[#E1306C]" },
+                  { label: "Facebook", icon: Facebook, colorClass: "group-hover:text-[#1877F2]" },
+                  { label: "Youtube", icon: Youtube, colorClass: "group-hover:text-[#FF0000]" },
+                  { label: "Twitter", icon: Twitter, colorClass: "group-hover:text-[#1DA1F2]" },
                 ].map((social) => (
                   <li key={social.label}>
                     <a
                       href="#"
-                      className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm font-body font-light"
+                      className="group flex items-center gap-3 text-white/60 hover:text-white hover:translate-x-2 transition-all duration-300 text-sm font-body font-light w-fit"
                     >
-                      <social.icon size={16} className="group-hover:text-[#C6A15B] transition-colors" />
+                      <social.icon size={16} className={`${social.colorClass} transition-colors`} />
                       {social.label}
                     </a>
                   </li>
@@ -107,7 +106,6 @@ const Footer = () => {
           <div className="flex gap-8">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms & Conditions</a>
-            <a href="#" className="hover:text-white transition-colors">Sitemap</a>
           </div>
         </div>
       </div>

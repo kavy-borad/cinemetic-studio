@@ -11,7 +11,7 @@ const CategoryCard = ({ title, slug, image, index }: { title: string; slug: stri
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{
-       duration: 0.3,
+       duration: 0.1,
         ease: "easeOut",
         delay: index * 0.15,
       }}
@@ -48,7 +48,7 @@ const PortfolioGrid = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.24, ease: "easeOut" }}
           className="text-center mb-24 flex flex-col items-center"
         >
           <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">

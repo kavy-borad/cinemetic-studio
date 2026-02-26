@@ -135,12 +135,12 @@ const Quote = () => {
         requirements: data.requirements || undefined,
       });
       toast.success("Consultation request received.", {
-        duration: 5000,
+        duration: 1500,
         className: "bg-background border-primary text-foreground"
       });
     } catch {
       toast.error("Could not save your request online, but your PDF quote is ready.", {
-        duration: 5000,
+        duration: 1500,
       });
     }
 
@@ -489,7 +489,7 @@ const Quote = () => {
         <motion.div
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2 }}
+          transition={{ duration: 0.27, delay: 0.06 }}
           className="max-w-[900px] mx-auto bg-[#121218]/80 backdrop-blur-xl border border-[#1E1E26] rounded-2xl shadow-[0_60px_150px_rgba(0,0,0,0.5)] overflow-hidden"
         >
           {/* Progress Bar */}
@@ -507,7 +507,7 @@ const Quote = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{duration: 0.2, ease: "circOut" }}
+                transition={{duration: 0.1, ease: "circOut" }}
               >
                 {/* STEP 1: PERSONAL DETAILS */}
                 {step === 1 && (

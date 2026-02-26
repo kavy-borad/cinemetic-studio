@@ -86,7 +86,7 @@ export const ServiceCard = ({
                 }}
                 whileHover="hover"
                 whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.12, ease: "easeOut" }}
                 className="h-full"
             >
                 <CinematicFrame className="h-full relative overflow-hidden group border border-[#1E1E26] hover:border-[#C6A15B]/50 transition-all duration-500 bg-[#121218] hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
@@ -98,7 +98,7 @@ export const ServiceCard = ({
                             variants={{
                                 hover: { y: -10 }
                             }}
-                            transition={{ duration: 0.3 }}
+                            transition={{ duration: 0.1 }}
                             className="text-2xl md:text-3xl font-heading text-foreground group-hover:text-primary transition-colors duration-300 mb-2"
                         >
                             {title}
@@ -113,7 +113,7 @@ export const ServiceCard = ({
                                 }}
                                 initial="initial"
                                 whileHover="hover"
-                                transition={{ duration: 0.3, delay: 0.1 }}
+                                transition={{ duration: 0.1, delay: 0.05 }}
                                 className="pt-4 flex flex-col items-center gap-4"
                             >
                                 <p className="text-sm text-muted-foreground font-light max-w-[200px] font-body">

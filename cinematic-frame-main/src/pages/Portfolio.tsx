@@ -36,7 +36,7 @@ const CategoryCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{
-        duration: 0.9,
+        duration: 0.27,
         ease: [0.215, 0.61, 0.355, 1.0],
         delay: isFullWidth ? 0 : (index % 2) * 0.15
       }}
@@ -99,7 +99,7 @@ const Portfolio = () => {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{duration: 0.3, ease: "easeOut" }}
+          transition={{duration: 0.1, ease: "easeOut" }}
           className="max-w-5xl mx-auto flex flex-col items-center"
         >
           <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
@@ -116,7 +116,7 @@ const Portfolio = () => {
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "100px" }}
-            transition={{duration: 0.3, delay: 0.5, ease: "circOut" }}
+            transition={{duration: 0.1, delay: 0.15, ease: "circOut" }}
             className="h-px bg-[#C6A15B] opacity-60"
           />
         </motion.div>

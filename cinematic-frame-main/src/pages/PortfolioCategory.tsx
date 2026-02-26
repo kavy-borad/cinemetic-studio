@@ -30,7 +30,7 @@ const AlbumCard = ({
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-5%" }}
-            transition={{duration: 0.3, delay: (index % 3) * 0.1 }}
+            transition={{duration: 0.1, delay: (index % 3) * 0.1 }}
             className="mb-10 break-inside-avoid relative pointer-events-none md:pointer-events-auto"
         >
             <CinematicFrame className="group cursor-pointer">
@@ -118,7 +118,7 @@ const PortfolioCategory = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{duration: 0.3 }}
+                        transition={{duration: 0.1 }}
                     >
                         <h1 className="font-heading text-5xl md:text-7xl text-white mb-4 shadow-black drop-shadow-lg capitalize">
                             {displayCategory} Stories

@@ -90,7 +90,7 @@ export const CinematicLightbox: React.FC<CinematicLightboxProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.12 }}
                     className="fixed inset-0 z-[999] flex items-center justify-center bg-black/90 backdrop-blur-[20px]"
                     onClick={onClose}
                 >
@@ -151,9 +151,9 @@ export const CinematicLightbox: React.FC<CinematicLightboxProps> = ({
                             }}
                             exit={layoutId ? { opacity: 1, borderRadius: "12px" } : { scale: 0.95, opacity: 0, filter: "blur(10px)" }}
                             transition={{
-                                duration: 0.45,
+                                duration: 0.14,
                                 ease: "easeInOut",
-                                layout: { duration: 0.45, ease: "easeInOut" }
+                                layout: { duration: 0.14, ease: "easeInOut" }
                             }}
                             className={cn(
                                 "relative max-w-full max-h-[85vh] overflow-hidden rounded-2xl shadow-[0_60px_150px_rgba(0,0,0,0.8)]",
