@@ -135,27 +135,42 @@ const Quote = () => {
   };
 
   const handleSubmit = async () => {
-    // POST to backend (non-blocking - PDF still generates on error)
+    // ── Build the dynamic payload from form data ──
+    const payload = {
+      name: data.name,
+      email: data.email || undefined,
+      phone: data.phone,
+      city: data.city || undefined,
+      eventType: data.eventType || undefined,
+      eventDate:
+        data.eventType === "Wedding" && data.eventEndDate
+          ? `${data.eventDate} to ${data.eventEndDate}`
+          : data.eventDate || undefined,
+      venue: data.venue || undefined,
+      guestCount: data.guestCount || undefined,
+      functions:
+        data.eventType === "Wedding"
+          ? data.weddingFunctions?.join(", ")
+          : undefined,
+      servicesRequested:
+        data.services.length > 0 ? data.services : undefined,
+      budget: data.budget || undefined,
+      requirements: data.requirements || undefined,
+    };
+
+    // ── Log: outgoing request for backend tracing ──
+    console.log("[Quotation] ➤ Submitting to backend:", JSON.stringify(payload, null, 2));
+
+    // ── POST to backend ──
     try {
-      await postQuotation({
-        name: data.name,
-        email: data.email || undefined,
-        phone: data.phone,
-        city: data.city || undefined,
-        eventType: data.eventType || undefined,
-        eventDate: data.eventType === "Wedding" && data.eventEndDate ? `${data.eventDate} to ${data.eventEndDate}` : data.eventDate || undefined,
-        venue: data.venue || undefined,
-        guestCount: data.guestCount || undefined,
-        functions: data.eventType === "Wedding" ? data.weddingFunctions?.join(", ") : undefined,
-        servicesRequested: data.services.length > 0 ? data.services : undefined,
-        budget: data.budget || undefined,
-        requirements: data.requirements || undefined,
-      });
+      const response = await postQuotation(payload);
+      console.log("[Quotation] ✔ Backend response:", response);
       toast.success("Consultation request received.", {
         duration: 1500,
         className: "bg-background border-primary text-foreground"
       });
-    } catch {
+    } catch (err) {
+      console.error("[Quotation] ✘ Backend error:", err);
       toast.error("Could not save your request online, but your PDF quote is ready.", {
         duration: 1500,
       });

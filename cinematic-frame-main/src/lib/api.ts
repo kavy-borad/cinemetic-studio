@@ -1,7 +1,7 @@
 // ─── API Base URL ─────────────────────────────────────────────────────────────
-// In development the Vite dev-server proxy forwards /api/* → http://localhost:5000
-// so we use a relative path to avoid CORS issues.
-export const API_BASE_URL = "/api";
+// Reads from .env → VITE_API_BASE_URL (e.g. http://localhost:5000/api)
+// Falls back to "/api" (Vite proxy) if env var is not set.
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
