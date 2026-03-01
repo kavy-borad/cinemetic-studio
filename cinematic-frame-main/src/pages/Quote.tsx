@@ -12,11 +12,14 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useSubmitQuotation } from "@/hooks/useQuotation";
 
-const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Baby Shower", "Birthday", "Corporate", "Other"];
+const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Reception", "Baby Shower", "Birthday", "Corporate", "Other"];
 const serviceOptions = [
   "Photography", "Cinematic Video", "Drone", "Album", "Live Streaming"
 ];
-const budgetRanges = ["< $1,000", "$1,000 - $3,000", "$3,000 - $5,000", "$5,000 - $10,000", "$10,000+"];
+const budgetRanges = ["< ₹50,000", "₹50,000 - ₹1,00,000", "₹1,00,000 - ₹3,00,000", "₹3,00,000 - ₹5,00,000", "₹5,00,000+"];
+const weddingFunctionsList = [
+  "Engagement", "Mandvo", "Pithi / Haldi", "Mehendi", "Garba / Sangeet", "Wedding Ceremony", "Reception", "Vana Rasam"
+];
 
 // Input Field Component - Redesigned
 const InputField = ({
@@ -26,7 +29,8 @@ const InputField = ({
   type = "text",
   placeholder,
   error,
-  required = false
+  required = false,
+  maxLength
 }: {
   label: string;
   value: string;
@@ -35,8 +39,9 @@ const InputField = ({
   placeholder?: string;
   error?: string;
   required?: boolean;
+  maxLength?: number;
 }) => (
-  <div className="mb-8 group">
+  <div className="group w-full">
     <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-3 transition-colors group-focus-within:text-primary">
       {label} {required && <span className="text-primary">*</span>}
     </label>
@@ -46,6 +51,7 @@ const InputField = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        maxLength={maxLength}
         className={`w-full bg-[#0F0F14] border border-[#1E1E26] rounded-[10px] h-[56px] px-6 text-foreground font-body text-base outline-none focus:border-primary focus:shadow-[0_0_20px_rgba(198,161,91,0.15)] transition-all duration-300 placeholder:text-[#6B6B76]`}
       />
     </div>
@@ -67,19 +73,19 @@ const SelectField = ({
   options: string[];
   error?: string;
 }) => (
-  <div className="mb-8">
-    <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-4">
+  <div className="w-full">
+    <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-4 transition-colors">
       {label}
     </label>
-    <div className="flex flex-wrap gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
           onClick={() => onChange(opt)}
-          className={`text-sm tracking-wide font-body px-6 py-3 rounded-[10px] border transition-all duration-300 ${value === opt
-            ? "border-primary text-primary bg-[rgba(198,161,91,0.08)] shadow-[0_0_15px_rgba(198,161,91,0.1)]"
-            : "border-[#1E1E26] bg-[#0F0F14] text-muted-foreground hover:border-white/20 hover:text-foreground"
+          className={`h-[56px] flex items-center justify-center text-center text-sm tracking-wide font-body px-4 rounded-[10px] border transition-all duration-300 ${value === opt
+            ? "border-primary text-primary bg-[rgba(198,161,91,0.08)] shadow-[0_0_20px_rgba(198,161,91,0.15)]"
+            : "border-[#1E1E26] bg-[#0F0F14] text-muted-foreground/70 hover:border-white/20 hover:text-white hover:bg-[#121218]"
             }`}
         >
           {opt}
@@ -103,7 +109,18 @@ const Quote = () => {
 
     if (currentStep === 1) {
       if (!data.name) newErrors.name = "Name is required";
-      if (!data.phone) newErrors.phone = "Mobile number is required";
+
+      if (!data.phone) {
+        newErrors.phone = "Mobile number is required";
+      } else if (data.phone.length !== 10) {
+        newErrors.phone = "Mobile number must be exactly 10 digits";
+      }
+
+      if (!data.email) {
+        newErrors.email = "Email address is required";
+      } else if (!data.email.includes("@") || !data.email.includes(".")) {
+        newErrors.email = "Please enter a valid email address with @ and .";
+      }
     }
 
     setErrors(newErrors);
@@ -126,10 +143,10 @@ const Quote = () => {
         phone: data.phone,
         city: data.city || undefined,
         eventType: data.eventType || undefined,
-        eventDate: data.eventDate || undefined,
+        eventDate: data.eventType === "Wedding" && data.eventEndDate ? `${data.eventDate} to ${data.eventEndDate}` : data.eventDate || undefined,
         venue: data.venue || undefined,
         guestCount: data.guestCount || undefined,
-        functions: data.functions || undefined,
+        functions: data.eventType === "Wedding" ? data.weddingFunctions?.join(", ") : undefined,
         servicesRequested: data.services.length > 0 ? data.services : undefined,
         budget: data.budget || undefined,
         requirements: data.requirements || undefined,
@@ -266,7 +283,13 @@ const Quote = () => {
     doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
     doc.setFont("helvetica", "bold");
     doc.text(data.eventType || "N/A", col2X + 30, yPos + 16);
-    doc.text(data.eventDate || "TBD", col2X + 30, yPos + 23);
+
+    // Add logic to display single date or date range gracefully
+    const displayDate = data.eventType === "Wedding" && data.eventEndDate
+      ? `${data.eventDate} - ${data.eventEndDate}`
+      : (data.eventDate || "TBD");
+    doc.text(displayDate.length > 20 ? displayDate.substring(0, 18) + ".." : displayDate, col2X + 30, yPos + 23);
+
     doc.text(data.guestCount || "TBD", col2X + 30, yPos + 30);
 
     const venueStr = data.venue || "N/A";
@@ -274,6 +297,20 @@ const Quote = () => {
     doc.text(truncVenue, col2X + 30, yPos + 37);
 
     yPos += 58;
+
+    // Optional: Print wedding functions on PDF if wedding selected
+    if (data.eventType === "Wedding" && data.weddingFunctions && data.weddingFunctions.length > 0) {
+      doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text("Functions Covered:", marginX, yPos - 8);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(textGray[0], textGray[1], textGray[2]);
+      doc.text(data.weddingFunctions.join(", "), marginX + 35, yPos - 8);
+      yPos += 5;
+    }
 
     // --- 3. REQUESTED SERVICES TABLE ---
 
@@ -453,7 +490,7 @@ const Quote = () => {
       <Navigation />
 
       {/* 1. HERO CONSULTATION INTRO */}
-      <section className="relative h-[60vh] min-h-[500px] w-full overflow-hidden flex items-center justify-center">
+      <section className="relative min-h-[60vh] w-full flex flex-col justify-center pt-40 pb-32 text-center z-10">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -467,20 +504,26 @@ const Quote = () => {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 text-center max-w-6xl px-6 pt-40"
+          transition={{ duration: 0.1, ease: "easeOut" }}
+          className="relative z-10 max-w-5xl mx-auto flex flex-col items-center px-6"
         >
-          <span className="text-[#C6A15B] text-xs font-medium tracking-editorial uppercase mb-6 inline-block">
+          <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
             Start Your Journey
           </span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading text-foreground mb-6 tracking-tight leading-none whitespace-nowrap">
+          <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full">
             Request a Quotation
           </h1>
-          <p className="text-white/60 font-body font-light text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Tell us about your vision. We’ll craft a personalized experience for your special day.
+          <p className="text-white/60 font-body font-light text-xl md:text-2xl w-full max-w-5xl text-center mx-auto mb-12 leading-relaxed">
+            Tell us about your vision. We'll craft a personalized experience for your special day.
           </p>
 
-          {/* Thin gold divider */}
-          <div className="h-px w-24 bg-[#C6A15B]/50 mx-auto" />
+          {/* Thin Gold Divider */}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100px" }}
+            transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
+            className="h-px bg-[#C6A15B] opacity-60"
+          />
         </motion.div>
       </section>
 
@@ -507,7 +550,7 @@ const Quote = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{duration: 0.1, ease: "circOut" }}
+                transition={{ duration: 0.1, ease: "circOut" }}
               >
                 {/* STEP 1: PERSONAL DETAILS */}
                 {step === 1 && (
@@ -516,7 +559,7 @@ const Quote = () => {
                       <h3 className="font-heading text-3xl text-foreground mb-2">Personal Details</h3>
                       <p className="text-muted-foreground text-sm font-body">Let's get to know you.</p>
                     </div>
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <InputField
                         label="Full Name"
                         value={data.name}
@@ -525,14 +568,18 @@ const Quote = () => {
                         error={errors.name}
                         required
                       />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <InputField
                           label="Mobile Number"
                           value={data.phone}
-                          onChange={(v) => setField("phone", v)}
+                          onChange={(v) => {
+                            const digitsOnly = v.replace(/\D/g, '').slice(0, 10);
+                            setField("phone", digitsOnly);
+                          }}
                           type="tel"
-                          placeholder="+91 00000 00000"
+                          placeholder="Enter your mobile number"
                           error={errors.phone}
+                          maxLength={10}
                           required
                         />
                         <InputField
@@ -541,6 +588,8 @@ const Quote = () => {
                           onChange={(v) => setField("email", v)}
                           type="email"
                           placeholder="hello@example.com"
+                          error={errors.email}
+                          required
                         />
                       </div>
                       <InputField label="City" value={data.city} onChange={(v) => setField("city", v)} placeholder="Where do you live?" />
@@ -558,26 +607,52 @@ const Quote = () => {
 
                     <SelectField label="Type of Event" value={data.eventType} onChange={(v) => setField("eventType", v)} options={eventTypes} />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                      <InputField label="Event Date" value={data.eventDate} onChange={(v) => setField("eventDate", v)} type="date" />
-                      <InputField label="Venue Name" value={data.venue} onChange={(v) => setField("venue", v)} placeholder="Where is it happening?" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <InputField label={data.eventType === "Wedding" ? "Start Date" : "Event Date"} value={data.eventDate} onChange={(v) => setField("eventDate", v)} type="date" />
+                      {data.eventType === "Wedding" ? (
+                        <InputField label="End Date" value={data.eventEndDate || ""} onChange={(v) => setField("eventEndDate", v)} type="date" />
+                      ) : (
+                        <InputField label="Venue Name & City" value={data.venue} onChange={(v) => setField("venue", v)} placeholder="Where is it happening?" />
+                      )}
                     </div>
 
-                    {data.eventType === "Wedding" ? (
-                      <div className="mb-8 group">
-                        <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-3 transition-colors group-focus-within:text-primary">
-                          Functions
+                    {data.eventType === "Wedding" && (
+                      <InputField label="Venue Name & City" value={data.venue} onChange={(v) => setField("venue", v)} placeholder="Where is it happening?" />
+                    )}
+
+                    <InputField label="Expected Guests" value={data.guestCount} onChange={(v) => setField("guestCount", v)} placeholder="e.g. 50-100" />
+
+                    {data.eventType === "Wedding" && (
+                      <div className="w-full">
+                        <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-4">
+                          Wedding Functions <span className="text-primary">*</span>
                         </label>
-                        <textarea
-                          value={data.functions}
-                          onChange={(e) => setField("functions", e.target.value)}
-                          placeholder="List the functions (e.g. Haldi, Mehendi, Wedding, Reception)"
-                          rows={3}
-                          className="w-full bg-[#0F0F14] border border-[#1E1E26] rounded-[10px] p-6 text-foreground font-body text-base outline-none focus:border-primary focus:shadow-[0_0_20px_rgba(198,161,91,0.15)] transition-all duration-300 placeholder:text-[#6B6B76] resize-none"
-                        />
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                          {weddingFunctionsList.map((func) => {
+                            const isSelected = data.weddingFunctions?.includes(func) || false;
+                            return (
+                              <button
+                                key={func}
+                                type="button"
+                                onClick={() => {
+                                  const current = data.weddingFunctions || [];
+                                  const updated = isSelected
+                                    ? current.filter(f => f !== func)
+                                    : [...current, func];
+                                  setField("weddingFunctions", updated);
+                                }}
+                                className={`h-[56px] flex items-center justify-center text-center text-sm tracking-wide font-body px-4 rounded-[10px] border transition-all duration-300 gap-2 ${isSelected
+                                  ? "border-primary text-primary bg-[rgba(198,161,91,0.08)] shadow-[0_0_20px_rgba(198,161,91,0.15)]"
+                                  : "border-[#1E1E26] bg-[#0F0F14] text-muted-foreground/70 hover:border-white/20 hover:text-white hover:bg-[#121218]"
+                                  }`}
+                              >
+                                {isSelected && <Check size={14} />}
+                                {func}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    ) : (
-                      <InputField label="Expected Guests" value={data.guestCount} onChange={(v) => setField("guestCount", v)} placeholder="e.g. 50-100" />
                     )}
                   </div>
                 )}

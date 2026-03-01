@@ -350,31 +350,31 @@ const Services = () => {
       <Navigation />
 
       {/* SECTION 1 – MODERN INTRO */}
-      <section className="pt-40 pb-20 md:pb-32 px-6 md:px-12 lg:px-24 text-center">
+      <section className="min-h-[60vh] flex flex-col justify-center pt-40 pb-20 px-6 md:px-12 lg:px-24 text-center relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{duration: 0.1, ease: "easeOut" }}
-          className="max-w-4xl mx-auto space-y-6"
+          transition={{ duration: 0.1, ease: "easeOut" }}
+          className="max-w-5xl mx-auto flex flex-col items-center"
         >
-          <motion.span
-            initial={{ letterSpacing: "0.3em" }}
-            animate={{ letterSpacing: "0.2em" }}
-            transition={{duration: 0.1, ease: "easeOut" }}
-            className="text-[#C6A15B] text-xs font-medium uppercase block font-body"
-          >
+          <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
             What We Offer
-          </motion.span>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading text-foreground tracking-tight">
+          </span>
+          <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full">
             Our Services
           </h1>
-          <p className="text-white/60 font-body font-light text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-white/60 font-body font-light text-xl md:text-2xl w-full max-w-5xl text-center mx-auto mb-12 leading-relaxed">
             We provide complete visual coverage for every special moment.
           </p>
 
-          {/* Thin gold divider */}
-          <div className="h-px w-24 bg-[#C6A15B]/40 mx-auto mt-8" />
+          {/* Thin Gold Divider */}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={isVisible ? { width: "100px" } : {}}
+            transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
+            className="h-px bg-[#C6A15B] opacity-60"
+          />
         </motion.div>
       </section>
 
@@ -426,7 +426,7 @@ const Services = () => {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{duration: 0.1 }}
+              transition={{ duration: 0.1 }}
             >
               <h2 className="text-[#C6A15B] font-body text-sm tracking-[0.3em] uppercase mb-4">
                 The Pixel Experience
@@ -451,7 +451,7 @@ const Services = () => {
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{duration: 0.1, delay: index * 0.1 }}
+                transition={{ duration: 0.1, delay: index * 0.1 }}
                 onMouseEnter={() => setActiveFeature(index)}
                 className={`group relative p-6 cursor-pointer border-l-2 transition-all duration-500 ${activeFeature === index
                   ? "border-[#C6A15B] bg-white/5"

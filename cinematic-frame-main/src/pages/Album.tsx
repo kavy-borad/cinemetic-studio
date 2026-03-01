@@ -73,7 +73,7 @@ const Album = () => {
             </div>
 
             {/* Album Hero Section */}
-            <section className="relative h-[70vh] min-h-[500px] overflow-hidden flex items-end justify-center pb-20">
+            <section className="relative min-h-[60vh] flex flex-col justify-center pt-40 pb-20 px-6 md:px-12 lg:px-24 text-center z-10 overflow-hidden">
                 <motion.div
                     ref={heroRef}
                     style={{ y }}
@@ -82,28 +82,37 @@ const Album = () => {
                     <img
                         src={images[0].src}
                         alt="Hero"
-                        className="w-full h-[120%] object-cover opacity-70"
+                        className="w-full h-full object-cover opacity-30 blur-[2px] scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0E] via-[#0B0B0E]/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0E] via-[#0B0B0E]/60 to-[#0B0B0E]" />
                 </motion.div>
 
-                <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+                <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{duration: 0.1, ease: "easeOut" }}
+                        transition={{ duration: 0.1, ease: "easeOut" }}
+                        className="flex flex-col items-center w-full"
                     >
-                        <p className="text-[#C6A15B] text-xs font-medium tracking-editorial uppercase mb-6">
-                            Est. 2025
-                        </p>
-                        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-white mb-6 capitalize leading-none">
+                        <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+                            Est. {albumDate.split(' ').pop()}
+                        </span>
+                        <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full capitalize">
                             {albumTitle}
                         </h1>
-                        <div className="flex items-center justify-center gap-6 text-white/60 text-sm tracking-widest font-light uppercase">
+                        <div className="flex items-center justify-center gap-6 text-white/60 text-sm tracking-widest font-light uppercase mb-12">
                             <span>{albumLocation}</span>
                             <span className="w-1 h-1 bg-[#C6A15B] rounded-full" />
                             <span>{albumDate}</span>
                         </div>
+
+                        {/* Thin Gold Divider */}
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: "100px" }}
+                            transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
+                            className="h-px bg-[#C6A15B] opacity-60"
+                        />
                     </motion.div>
                 </div>
             </section>
@@ -117,7 +126,7 @@ const Album = () => {
                             initial={{ opacity: 0, y: 60 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "0px" }}
-                            transition={{duration: 0.1, delay: (index % 3) * 0.1 }}
+                            transition={{ duration: 0.1, delay: (index % 3) * 0.1 }}
                             className="break-inside-avoid relative mb-8"
                             onClick={() => setSelectedImage(index)}
                         >

@@ -30,7 +30,7 @@ const AlbumCard = ({
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-5%" }}
-            transition={{duration: 0.1, delay: (index % 3) * 0.1 }}
+            transition={{ duration: 0.1, delay: (index % 3) * 0.1 }}
             className="mb-10 break-inside-avoid relative pointer-events-none md:pointer-events-auto"
         >
             <CinematicFrame className="group cursor-pointer">
@@ -85,7 +85,7 @@ const PortfolioCategory = () => {
             date: p.eventDate
                 ? new Date(p.eventDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })
                 : "2025",
-          }))
+        }))
         : Array.from({ length: 9 }).map((_, i) => ({
             id: i,
             src: selectedImages[i % selectedImages.length],
@@ -93,14 +93,14 @@ const PortfolioCategory = () => {
             title: `${displayCategory} Collection ${i + 1}`,
             location: ["Paris, France", "Santorini, Greece", "Kyoto, Japan", "Lake Como, Italy"][i % 4],
             date: ["Oct 2025", "Sep 2025", "Aug 2025", "July 2025"][i % 4]
-          }));
+        }));
 
     return (
         <main className="min-h-screen bg-[#0B0B0E] relative">
             <Navigation />
 
             {/* Cinematic Banner */}
-            <section className="relative h-[50vh] min-h-[400px] overflow-hidden flex items-center justify-center">
+            <section className="relative min-h-[60vh] flex flex-col justify-center pt-40 pb-20 px-6 md:px-12 lg:px-24 text-center z-10 overflow-hidden">
                 <motion.div
                     ref={ref}
                     style={{ y }}
@@ -109,23 +109,35 @@ const PortfolioCategory = () => {
                     <img
                         src={selectedImages[0]}
                         alt="Header"
-                        className="w-full h-[120%] object-cover opacity-60"
+                        className="w-full h-full object-cover opacity-30 blur-[2px] scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0E]/30 via-[#0B0B0E]/60 to-[#0B0B0E]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0E] via-[#0B0B0E]/60 to-[#0B0B0E]" />
                 </motion.div>
 
-                <div className="relative z-10 text-center px-6">
+                <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{duration: 0.1 }}
+                        transition={{ duration: 0.1, ease: "easeOut" }}
+                        className="flex flex-col items-center w-full"
                     >
-                        <h1 className="font-heading text-5xl md:text-7xl text-white mb-4 shadow-black drop-shadow-lg capitalize">
+                        <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+                            Portfolio
+                        </span>
+                        <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full capitalize">
                             {displayCategory} Stories
                         </h1>
-                        <p className="text-white/80 font-body text-lg italic tracking-wide max-w-xl mx-auto">
-                            "Timeless moments, beautifully captured."
+                        <p className="text-white/60 font-body font-light text-xl md:text-2xl w-full max-w-5xl text-center mx-auto mb-12 leading-relaxed">
+                            Timeless moments, beautifully captured.
                         </p>
+
+                        {/* Thin Gold Divider */}
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: "100px" }}
+                            transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
+                            className="h-px bg-[#C6A15B] opacity-60"
+                        />
                     </motion.div>
                 </div>
             </section>

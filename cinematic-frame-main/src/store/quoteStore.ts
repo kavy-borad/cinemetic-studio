@@ -9,9 +9,11 @@ interface QuoteState {
     city: string;
     venue: string;
     eventDate: string;
+    eventEndDate?: string;
     eventType: string;
     guestCount: string;
     functions: string;
+    weddingFunctions?: string[];
     services: string[];
     budget: string;
     setting: string;
