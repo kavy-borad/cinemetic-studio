@@ -1,9 +1,32 @@
-
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Camera, Clock, Heart } from "lucide-react";
+import { motion, useInView, animate } from "framer-motion";
 import PlaceholderImage from "./PlaceholderImage";
+
+const Counter = ({ value, duration = 2 }: { value: number; duration?: number }) => {
+    const ref = useRef<HTMLSpanElement>(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    useEffect(() => {
+        if (isInView && ref.current) {
+            const controls = animate(0, value, {
+                duration,
+                ease: "easeOut",
+                onUpdate(value) {
+                    if (ref.current) {
+                        ref.current.textContent = Math.round(value).toString() + "+";
+                    }
+                },
+            });
+
+            return () => controls.stop();
+        }
+    }, [value, duration, isInView]);
+
+    return <span ref={ref}>0+</span>;
+};
 
 const AboutSection = () => {
     const { ref, isVisible } = useScrollReveal(0.2);
@@ -65,19 +88,26 @@ const AboutSection = () => {
                         {/* Highlights */}
                         <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50">
                             {[
-                                { label: "Total Weddings", value: "150+", icon: Heart },
-                                { label: "Happy Clients", value: "500+", icon: Camera },
-                                { label: "Years Experience", value: "10+", icon: Clock }
+                                { label: "Total Weddings", value: 150, delay: 0, icon: Heart },
+                                { label: "Happy Clients", value: 500, delay: 0.15, icon: Camera },
+                                { label: "Years Experience", value: 10, delay: 0.3, icon: Clock }
                             ].map((item, idx) => (
-                                <div key={idx} className="group cursor-default text-center md:text-left">
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ duration: 0.6, delay: item.delay, ease: "easeOut" }}
+                                    className="group cursor-default text-center md:text-left"
+                                >
                                     <item.icon className="w-5 h-5 text-primary mb-2 mx-auto md:mx-0 opacity-80 group-hover:opacity-100 transition-opacity" />
                                     <h4 className="text-xl md:text-2xl font-heading text-foreground group-hover:text-primary transition-colors duration-300">
-                                        {item.value}
+                                        <Counter value={item.value} duration={2} />
                                     </h4>
                                     <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mt-1">
                                         {item.label}
                                     </p>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>

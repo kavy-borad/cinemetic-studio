@@ -27,38 +27,43 @@ const AlbumCard = ({
 }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 80, scale: 0.9, filter: "blur(15px)" }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-5%" }}
-            transition={{ duration: 0.1, delay: (index % 3) * 0.1 }}
+            transition={{
+                duration: 0.8,
+                ease: [0.16, 1, 0.3, 1], // Cinematic custom bezier curve
+                delay: (index % 3) * 0.15
+            }}
             className="mb-10 break-inside-avoid relative pointer-events-none md:pointer-events-auto"
         >
-            <CinematicFrame className="group cursor-pointer">
+            <CinematicFrame className="group cursor-pointer rounded-xl overflow-hidden shadow-2xl hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all duration-500">
                 <Link to={`/album/${slug}`} className="block relative overflow-hidden">
-                    <div className="overflow-hidden rounded-xl">
+                    <div className="overflow-hidden bg-gray-900 aspect-[3/4] sm:aspect-auto">
                         <img
                             src={image}
                             alt={title}
-                            className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                            className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1"
                         />
                     </div>
 
-                    {/* Dark Overlay on Hover */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center rounded-xl">
-                        <span className="px-8 py-3 bg-white/10 backdrop-blur-md border border-white/30 text-white font-medium tracking-editorial text-xs uppercase transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    {/* Premium Glassmorphic Overlay on Hover */}
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center backdrop-blur-md">
+                        <span className="px-8 py-4 bg-transparent border border-[#C6A15B] text-[#C6A15B] tracking-[0.3em] font-medium text-xs uppercase transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 delay-100 hover:bg-[#C6A15B] hover:text-black hover:drop-shadow-[0_0_20px_rgba(198,161,91,0.5)]">
                             View Story
                         </span>
                     </div>
                 </Link>
             </CinematicFrame>
 
-            <div className="mt-6 text-center">
-                <h3 className="font-heading text-2xl text-white group-hover:text-[#C6A15B] transition-colors duration-300">
+            <div className="mt-6 text-center transform transition-transform duration-500 group-hover:-translate-y-2">
+                <h3 className="font-heading text-2xl md:text-3xl text-white group-hover:text-[#C6A15B] transition-colors duration-500 tracking-wide drop-shadow-md">
                     {title}
                 </h3>
-                <p className="text-white/50 text-xs tracking-editorial uppercase mt-2 font-light">
+                <p className="text-white/50 text-[10px] md:text-xs tracking-[0.3em] uppercase mt-3 font-light">
                     {location} • {date}
                 </p>
+                <div className="h-[1px] w-0 group-hover:w-16 bg-[#C6A15B] mx-auto mt-4 transition-all duration-500 ease-out" />
             </div>
         </motion.div>
     );

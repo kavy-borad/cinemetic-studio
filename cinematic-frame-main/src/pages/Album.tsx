@@ -123,30 +123,34 @@ const Album = () => {
                     {images.map((img, index) => (
                         <motion.div
                             key={img.id}
-                            initial={{ opacity: 0, y: 60 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "0px" }}
-                            transition={{ duration: 0.1, delay: (index % 3) * 0.1 }}
+                            initial={{ opacity: 0, y: 100, scale: 0.9, filter: "blur(20px)" }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                            viewport={{ once: true, margin: "-10%" }}
+                            transition={{
+                                duration: 0.8,
+                                ease: [0.16, 1, 0.3, 1], // Cinematic ease out
+                                delay: (index % 3) * 0.15
+                            }}
                             className="break-inside-avoid relative mb-8"
                             onClick={() => setSelectedImage(index)}
                         >
-                            <CinematicFrame className="group cursor-zoom-in">
+                            <CinematicFrame className="group cursor-zoom-in rounded-xl overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-shadow duration-700">
                                 <motion.div
                                     layoutId={`image-${img.id}`}
-                                    className="w-full h-full"
+                                    className="w-full h-full overflow-hidden"
                                 >
                                     <img
                                         src={img.src}
                                         alt={img.alt}
-                                        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                                        className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.05]"
                                         loading="lazy"
                                     />
                                 </motion.div>
 
-                                {/* Hover Overlay */}
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                    <span className="bg-white/10 backdrop-blur-md p-3 rounded-full text-white ring-1 ring-white/30">
-                                        <Maximize2 size={24} strokeWidth={1.5} />
+                                {/* Premium Golden Glassmorphism Hover Overlay */}
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center backdrop-blur-[2px]">
+                                    <span className="bg-[#C6A15B]/20 backdrop-blur-md p-4 rounded-full text-white ring-1 ring-[#C6A15B]/60 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 ease-out shadow-[0_0_20px_rgba(198,161,91,0.4)]">
+                                        <Maximize2 size={24} strokeWidth={1.5} className="text-white drop-shadow-md" />
                                     </span>
                                 </div>
                             </CinematicFrame>
