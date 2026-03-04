@@ -1,8 +1,8 @@
 
-import PlaceholderImage from "@/components/PlaceholderImage";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { portfolioCategories } from "@/data/portfolio";
+import { usePortfolios } from "@/hooks/usePortfolio";
+import { toImageUrl } from "@/lib/api";
 
 const CategoryCard = ({ title, slug, image, index }: { title: string; slug: string; image: string; index: number }) => {
   return (
@@ -41,6 +41,25 @@ const CategoryCard = ({ title, slug, image, index }: { title: string; slug: stri
 };
 
 const PortfolioGrid = () => {
+  const { data: allPortfolios, isLoading, isError } = usePortfolios();
+
+  // Derive unique categories from API data
+  const categories = (() => {
+    if (!allPortfolios || allPortfolios.length === 0) return [];
+    const seen = new Map<string, { title: string; slug: string; image: string }>();
+    for (const p of allPortfolios) {
+      const slug = p.category?.toLowerCase().replace(/\s+/g, "-") || "uncategorized";
+      if (!seen.has(slug)) {
+        seen.set(slug, {
+          title: p.category || "Uncategorized",
+          slug,
+          image: toImageUrl(p.coverImage),
+        });
+      }
+    }
+    return Array.from(seen.values());
+  })();
+
   return (
     <section className="section-padding bg-surface overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -60,11 +79,33 @@ const PortfolioGrid = () => {
           <div className="w-12 h-[1px] bg-[#C6A15B]" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {portfolioCategories.map((cat, i) => (
-            <CategoryCard key={cat.title} {...cat} index={i} />
-          ))}
-        </div>
+        {/* Loading */}
+        {isLoading && (
+          <div className="flex justify-center py-16">
+            <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Error */}
+        {isError && (
+          <p className="text-center text-red-400/60 text-xs tracking-editorial uppercase py-10">
+            ⚠ Could not load portfolio
+          </p>
+        )}
+
+        {/* Empty */}
+        {!isLoading && !isError && categories.length === 0 && (
+          <p className="text-center text-white/30 text-sm py-10">No portfolio categories yet</p>
+        )}
+
+        {/* Dynamic Category Grid */}
+        {!isLoading && categories.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {categories.map((cat, i) => (
+              <CategoryCard key={cat.slug} {...cat} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -7,9 +7,9 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { Maximize2, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CinematicLightbox } from "@/components/CinematicLightbox";
-import { getCategoryImages, categoryImages } from "@/data/portfolio";
 import { CinematicFrame } from "@/components/CinematicFrame";
 import { usePortfolioBySlug } from "@/hooks/usePortfolio";
+import { toImageUrl } from "@/lib/api";
 
 const Album = () => {
     const { slug } = useParams();
@@ -19,28 +19,31 @@ const Album = () => {
     const y = useTransform(scrollYProgress, [0, 1], [0, 100]); // Parallax for hero
 
     // Fetch portfolio from API by slug
-    const { data: portfolio } = usePortfolioBySlug(slug);
+    const { data: portfolio, isLoading: portfolioLoading, isError: portfolioError } = usePortfolioBySlug(slug);
 
-    // Determine category from slug (for static fallback)
-    let categoryKey = "wedding";
-    if (slug) {
-        const keys = Object.keys(categoryImages);
-        const sortedKeys = keys.sort((a, b) => b.length - a.length);
-        const match = sortedKeys.find(key => slug.toLowerCase().includes(key));
-        if (match) categoryKey = match;
-    }
+    // ── Safe image parser ──────────────────────────────────────────────────────
+    // MySQL JSON field can sometimes return as a string instead of parsed array.
+    // This helper handles both cases to prevent TypeError crash (black screen).
+    const parseImages = (raw: any): string[] => {
+        if (!raw) return [];
+        if (Array.isArray(raw)) return raw;                       // ✅ already array
+        if (typeof raw === "string") {
+            try { return JSON.parse(raw); } catch { return []; }  // ✅ parse JSON string
+        }
+        return [];
+    };
 
-    const baseImages = getCategoryImages(categoryKey);
-
-    // Use API images when available, otherwise fall back to static data
-    const apiImages = portfolio?.images ?? [];
-    const sourceImages = apiImages.length > 0 ? apiImages : baseImages;
-    const images = Array.from({ length: Math.max(15, sourceImages.length) }).map((_, i) => ({
+    const apiImages = parseImages(portfolio?.images).map((src) => toImageUrl(src));
+    const images = apiImages.map((src, i) => ({
         id: i,
-        src: sourceImages[i % sourceImages.length],
-        alt: `${portfolio?.title ?? categoryKey} Photo ${i + 1}`,
+        src,
+        alt: `${portfolio?.title ?? "Album"} Photo ${i + 1}`,
         aspect: i % 3 === 0 ? "aspect-[4/3]" : i % 2 === 0 ? "aspect-[3/4]" : "aspect-square"
     }));
+
+    // Hero image: prefer the coverImage from API, fallback to first gallery image
+    const heroSrc = toImageUrl(portfolio?.coverImage) || (images[0]?.src ?? "");
+
 
     const albumTitle = portfolio?.title ?? slug?.replace(/-/g, " ") ?? "Album Title";
     const albumLocation = portfolio?.clientName ?? "India";
@@ -80,7 +83,7 @@ const Album = () => {
                     className="absolute inset-0 z-0"
                 >
                     <img
-                        src={images[0].src}
+                        src={heroSrc}
                         alt="Hero"
                         className="w-full h-full object-cover opacity-30 blur-[2px] scale-105"
                     />
@@ -119,8 +122,35 @@ const Album = () => {
 
             {/* Masonry Image Gallery */}
             <section className="px-4 md:px-12 lg:px-24 pb-32 -mt-10 relative z-10">
+
+                {/* API Loading */}
+                {portfolioLoading && (
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+                        <p className="text-white/40 text-xs tracking-editorial uppercase">Loading album from API...</p>
+                    </div>
+                )}
+
+                {/* API Error */}
+                {portfolioError && (
+                    <div className="flex flex-col items-center justify-center py-24 gap-3">
+                        <p className="text-red-400/60 text-xs tracking-editorial uppercase">
+                            ⚠ Could not load this album
+                        </p>
+                        <p className="text-white/30 text-xs">Please try again later</p>
+                    </div>
+                )}
+
+                {/* Empty State */}
+                {!portfolioLoading && !portfolioError && images.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-24 gap-3">
+                        <p className="text-white/40 text-sm tracking-editorial uppercase">No photos in this album</p>
+                        <p className="text-white/20 text-xs">Upload photos in the admin panel</p>
+                    </div>
+                )}
+
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-                    {images.map((img, index) => (
+                    {!portfolioLoading && images.map((img, index) => (
                         <motion.div
                             key={img.id}
                             initial={{ opacity: 0, y: 60 }}

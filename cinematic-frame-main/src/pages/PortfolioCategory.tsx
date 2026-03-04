@@ -3,12 +3,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { getCategoryImages } from "@/data/portfolio";
 import { useRef } from "react";
 import { CinematicFrame } from "@/components/CinematicFrame";
-import PlaceholderImage from "@/components/PlaceholderImage";
 import { usePortfolios } from "@/hooks/usePortfolio";
-//hello
+import { toImageUrl } from "@/lib/api";
 // Album Card for Masonry Grid
 const AlbumCard = ({
     title,
@@ -71,29 +69,24 @@ const PortfolioCategory = () => {
     const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
     const displayCategory = category?.replace(/-/g, " ") || "Category";
-    const selectedImages = getCategoryImages(category);
-    const { data: apiPortfolios } = usePortfolios(category);
+    const { data: apiPortfolios, isLoading, isError, error } = usePortfolios(category);
 
-    // Use API data when available, otherwise fall back to mock albums
-    const albums = (apiPortfolios && apiPortfolios.length > 0)
-        ? apiPortfolios.map((p, i) => ({
+    // Only use API data — no static fallback
+    const albums = (apiPortfolios ?? [])
+        .filter((p) => p.slug && p.slug !== "null")
+        .map((p) => ({
             id: p.id,
-            src: p.coverImage || selectedImages[i % selectedImages.length],
+            src: toImageUrl(p.coverImage),
             slug: p.slug,
             title: p.title,
             location: p.clientName || "Ahmedabad, India",
             date: p.eventDate
                 ? new Date(p.eventDate).toLocaleDateString("en-IN", { month: "short", year: "numeric" })
                 : "2025",
-        }))
-        : Array.from({ length: 9 }).map((_, i) => ({
-            id: i,
-            src: selectedImages[i % selectedImages.length],
-            slug: `${category}-album-${i}`,
-            title: `${displayCategory} Collection ${i + 1}`,
-            location: ["Paris, France", "Santorini, Greece", "Kyoto, Japan", "Lake Como, Italy"][i % 4],
-            date: ["Oct 2025", "Sep 2025", "Aug 2025", "July 2025"][i % 4]
         }));
+
+    // Banner image from first API portfolio
+    const bannerImage = albums.length > 0 ? albums[0].src : "";
 
     return (
         <main className="min-h-screen bg-[#0B0B0E] relative">
@@ -106,11 +99,13 @@ const PortfolioCategory = () => {
                     style={{ y }}
                     className="absolute inset-0 z-0"
                 >
-                    <img
-                        src={selectedImages[0]}
-                        alt="Header"
-                        className="w-full h-full object-cover opacity-30 blur-[2px] scale-105"
-                    />
+                    {bannerImage && (
+                        <img
+                            src={bannerImage}
+                            alt="Header"
+                            className="w-full h-full object-cover opacity-30 blur-[2px] scale-105"
+                        />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0E] via-[#0B0B0E]/60 to-[#0B0B0E]" />
                 </motion.div>
 
@@ -144,8 +139,35 @@ const PortfolioCategory = () => {
 
             {/* Editorial Masonry Grid */}
             <section className="px-6 md:px-12 lg:px-24 pb-32 relative z-10 -mt-10">
+
+                {/* API Loading State */}
+                {isLoading && (
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+                        <p className="text-white/40 text-xs tracking-editorial uppercase">Loading from API...</p>
+                    </div>
+                )}
+
+                {/* API Error State */}
+                {isError && (
+                    <div className="flex flex-col items-center justify-center py-10 mb-10 gap-2">
+                        <p className="text-red-400/70 text-xs tracking-editorial uppercase">
+                            ⚠ API Error: {(error as Error)?.message || "Could not connect to backend"}
+                        </p>
+                        <p className="text-white/30 text-xs">Please try again later</p>
+                    </div>
+                )}
+
+                {/* Empty State (API connected but no albums) */}
+                {!isLoading && !isError && albums.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-24 gap-3">
+                        <p className="text-white/40 text-sm tracking-editorial uppercase">No albums found</p>
+                        <p className="text-white/20 text-xs">Add albums in the admin panel to see them here</p>
+                    </div>
+                )}
+
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-10 space-y-10">
-                    {albums.map((album, index) => (
+                    {!isLoading && albums.map((album, index) => (
                         <AlbumCard
                             key={album.id}
                             title={album.title}

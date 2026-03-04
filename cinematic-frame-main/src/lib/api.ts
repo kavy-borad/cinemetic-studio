@@ -3,6 +3,17 @@
 // Falls back to "/api" (Vite proxy) if env var is not set.
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
+// Server root (without /api) — used for building image URLs
+export const API_SERVER_URL = API_BASE_URL.replace(/\/api$/, "");
+
+/** Convert a relative /uploads/... path to a full URL */
+export function toImageUrl(path: string | null | undefined): string {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;   // already absolute (Cloudinary etc.)
+  return `${API_SERVER_URL}${path}`;          // e.g. http://localhost:5000/uploads/...
+}
+
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface PortfolioItem {
@@ -75,7 +86,7 @@ async function apiFetch<T>(
 // ─── Portfolio API ─────────────────────────────────────────────────────────────
 
 /** Fetch all portfolios, optionally filtered by category */
-export function fetchPortfolios(params?: {
+export async function fetchPortfolios(params?: {
   category?: string;
   featured?: boolean;
 }): Promise<PortfolioItem[]> {
@@ -83,17 +94,27 @@ export function fetchPortfolios(params?: {
   if (params?.category) query.set("category", params.category);
   if (params?.featured !== undefined) query.set("featured", String(params.featured));
   const qs = query.toString();
-  return apiFetch<PortfolioItem[]>(`/portfolio${qs ? `?${qs}` : ""}`);
+
+  // Backend returns { success: true, data: [...] }
+  const res = await apiFetch<{ success: boolean; data: PortfolioItem[] }>(
+    `/portfolio${qs ? `?${qs}` : ""}`
+  );
+  return res.data ?? [];
 }
 
 /** Fetch a single portfolio by ID */
 export function fetchPortfolioById(id: number): Promise<PortfolioItem> {
-  return apiFetch<PortfolioItem>(`/portfolio/${id}`);
+  // Backend returns { success: true, data: {...} }
+  return apiFetch<{ success: boolean; data: PortfolioItem }>(`/portfolio/${id}`)
+    .then((r) => r.data);
 }
 
-/** Fetch a single portfolio by slug */
-export function fetchPortfolioBySlug(slug: string): Promise<PortfolioItem> {
-  return apiFetch<PortfolioItem>(`/portfolio/slug/${slug}`);
+/** Fetch a single portfolio by slug – GET /api/portfolio/slug/:slug */
+export async function fetchPortfolioBySlug(slug: string): Promise<PortfolioItem> {
+  const res = await apiFetch<{ success: boolean; data: PortfolioItem }>(
+    `/portfolio/slug/${slug}`
+  );
+  return res.data;
 }
 
 // ─── Services API ──────────────────────────────────────────────────────────────

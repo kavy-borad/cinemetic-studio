@@ -2,9 +2,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { portfolioCategories } from "@/data/portfolio";
 import { useRef } from "react";
 import { CinematicFrame } from "@/components/CinematicFrame";
+import { usePortfolios } from "@/hooks/usePortfolio";
+import { toImageUrl } from "@/lib/api";
 
 // Editorial Category Card Component
 const CategoryCard = ({
@@ -83,6 +84,25 @@ const CategoryCard = ({
 };
 
 const Portfolio = () => {
+  const { data: allPortfolios, isLoading, isError } = usePortfolios();
+
+  // Derive unique categories from API data — one card per category using its first portfolio's cover image
+  const dynamicCategories = (() => {
+    if (!allPortfolios || allPortfolios.length === 0) return [];
+    const seen = new Map<string, { title: string; slug: string; image: string }>();
+    for (const p of allPortfolios) {
+      const slug = p.category?.toLowerCase().replace(/\s+/g, "-") || "uncategorized";
+      if (!seen.has(slug)) {
+        seen.set(slug, {
+          title: p.category || "Uncategorized",
+          slug,
+          image: toImageUrl(p.coverImage),
+        });
+      }
+    }
+    return Array.from(seen.values());
+  })();
+
   return (
     <main className="min-h-screen bg-[#0B0B0E] relative overflow-x-hidden">
       {/* Background Atmosphere */}
@@ -124,22 +144,47 @@ const Portfolio = () => {
 
       {/* Editorial Category Grid */}
       <section className="px-6 md:px-12 lg:px-24 pb-32 md:pb-48 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1800px] mx-auto">
-          {portfolioCategories.map((cat, i) => {
-            // Pattern: Full (0) -> Split (1,2) -> Full (3) -> Split (4,5)...
-            // logic: if index % 3 === 0 then full width
-            const isFullWidth = i % 3 === 0;
 
-            return (
-              <CategoryCard
-                key={cat.slug}
-                {...cat}
-                index={i}
-                isFullWidth={isFullWidth}
-              />
-            );
-          })}
-        </div>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+            <p className="text-white/40 text-xs tracking-editorial uppercase">Loading categories...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {isError && (
+          <div className="flex flex-col items-center justify-center py-32 gap-3">
+            <p className="text-red-400/70 text-xs tracking-editorial uppercase">⚠ Could not connect to backend</p>
+            <p className="text-white/30 text-xs">Please try again later</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !isError && dynamicCategories.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-32 gap-3">
+            <p className="text-white/40 text-sm tracking-editorial uppercase">No categories found</p>
+            <p className="text-white/20 text-xs">Add portfolios in the admin panel to see categories here</p>
+          </div>
+        )}
+
+        {/* Dynamic Category Grid */}
+        {!isLoading && dynamicCategories.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1800px] mx-auto">
+            {dynamicCategories.map((cat, i) => {
+              const isFullWidth = i % 3 === 0;
+              return (
+                <CategoryCard
+                  key={cat.slug}
+                  {...cat}
+                  index={i}
+                  isFullWidth={isFullWidth}
+                />
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <Footer />
