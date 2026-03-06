@@ -6,6 +6,7 @@ interface QuoteState {
     name: string;
     email: string;
     phone: string;
+    countryCode: string;
     city: string;
     venue: string;
     eventDate: string;
@@ -29,6 +30,7 @@ const initialData = {
   name: "",
   email: "",
   phone: "",
+  countryCode: "+91",
   city: "",
   venue: "",
   eventDate: "",

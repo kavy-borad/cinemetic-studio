@@ -70,14 +70,21 @@ async function apiFetch<T>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
+  const { headers: extraHeaders, ...restOptions } = options ?? {};
+
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
+    // Merge headers explicitly so Content-Type is never overwritten by spread
+    headers: {
+      "Content-Type": "application/json",
+      ...(extraHeaders as Record<string, string>),
+    },
+    ...restOptions,
   });
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body?.message || `API error ${res.status}`);
+    // Surface the backend's human-readable error message
+    throw new Error(body?.message || body?.error || `API error ${res.status}`);
   }
 
   return res.json() as Promise<T>;

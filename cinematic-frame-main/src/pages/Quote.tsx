@@ -8,9 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck, Clock, Users, Star } from "lucide-react";
 import { z } from "zod";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { useSubmitQuotation } from "@/hooks/useQuotation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Reception", "Baby Shower", "Birthday", "Corporate", "Other"];
 const serviceOptions = [
@@ -20,6 +19,60 @@ const budgetRanges = ["< ₹50,000", "₹50,000 - ₹1,00,000", "₹1,00,000 - �
 const weddingFunctionsList = [
   "Engagement", "Mandvo", "Pithi / Haldi", "Mehendi", "Garba / Sangeet", "Wedding Ceremony", "Reception", "Vana Rasam"
 ];
+
+// ─── Country Code Options (for dropdown) ─────────────────────
+const COUNTRY_OPTIONS = [
+  { code: "+91", abbr: "IN", flag: "🇮🇳", label: "India" },
+  { code: "+1", abbr: "US", flag: "🇺🇸", label: "USA/Canada" },
+  { code: "+44", abbr: "GB", flag: "🇬🇧", label: "UK" },
+  { code: "+61", abbr: "AU", flag: "🇦🇺", label: "Australia" },
+  { code: "+971", abbr: "AE", flag: "🇦🇪", label: "UAE" },
+  { code: "+966", abbr: "SA", flag: "🇸🇦", label: "Saudi Arabia" },
+  { code: "+974", abbr: "QA", flag: "🇶🇦", label: "Qatar" },
+  { code: "+965", abbr: "KW", flag: "🇰🇼", label: "Kuwait" },
+  { code: "+92", abbr: "PK", flag: "🇵🇰", label: "Pakistan" },
+  { code: "+880", abbr: "BD", flag: "🇧🇩", label: "Bangladesh" },
+];
+
+// ─── Country-specific phone rules ────────────────────────────
+const COUNTRY_PHONE_RULES: Record<string, { digits: number; startsWith: RegExp; name: string }> = {
+  "+91": { digits: 10, startsWith: /^[6-9]/, name: "India" },
+  "+1": { digits: 10, startsWith: /^[2-9]/, name: "USA/Canada" },
+  "+44": { digits: 10, startsWith: /^[1-9]/, name: "UK" },
+  "+61": { digits: 9, startsWith: /^[2-9]/, name: "Australia" },
+  "+971": { digits: 9, startsWith: /^[1-9]/, name: "UAE" },
+  "+966": { digits: 9, startsWith: /^[1-9]/, name: "Saudi Arabia" },
+  "+974": { digits: 8, startsWith: /^[1-9]/, name: "Qatar" },
+  "+965": { digits: 8, startsWith: /^[1-9]/, name: "Kuwait" },
+  "+92": { digits: 10, startsWith: /^[3-9]/, name: "Pakistan" },
+  "+880": { digits: 10, startsWith: /^[1-9]/, name: "Bangladesh" },
+};
+
+// ─── Phone Validator (mirrors backend logic) ──────────────────
+function validatePhone(countryCode: string, phoneNumber: string): string | null {
+  const digits = phoneNumber.replace(/[\s\-\(\)\.]/g, "");
+
+  if (!digits) return "Mobile number is required.";
+  if (!/^\d+$/.test(digits)) return "Only numbers are allowed.";
+
+  // Block all-same / all-zero fake numbers
+  if (/^(\d)\1+$/.test(digits)) return "Phone number is not valid. Enter a real number.";
+  if (/^0+\d*$/.test(digits)) return "Phone number is not valid. Enter a real number.";
+  if (/^(\d)\1{7,}/.test(digits)) return "Phone number looks fake. Enter a real number.";
+
+  const rule = COUNTRY_PHONE_RULES[countryCode];
+  if (rule) {
+    if (digits.length !== rule.digits)
+      return `${rule.name} number must be exactly ${rule.digits} digits.`;
+    if (!rule.startsWith.test(digits))
+      return `${rule.name} number starts with an invalid digit.`;
+  } else {
+    if (digits.length < 7 || digits.length > 15)
+      return "Phone number must be between 7 and 15 digits.";
+  }
+
+  return null; // ✅ Valid
+}
 
 // Input Field Component - Redesigned
 const InputField = ({
@@ -102,7 +155,7 @@ const Quote = () => {
   const totalSteps = 4;
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { mutateAsync: postQuotation } = useSubmitQuotation();
+  const { mutateAsync: postQuotation, isPending: isSubmitting } = useSubmitQuotation();
 
   const validateStep = (currentStep: number) => {
     const newErrors: Record<string, string> = {};
@@ -110,11 +163,9 @@ const Quote = () => {
     if (currentStep === 1) {
       if (!data.name) newErrors.name = "Name is required";
 
-      if (!data.phone) {
-        newErrors.phone = "Mobile number is required";
-      } else if (data.phone.length !== 10) {
-        newErrors.phone = "Mobile number must be exactly 10 digits";
-      }
+      // ── Country-aware phone validation ──
+      const phoneErr = validatePhone(data.countryCode || "+91", data.phone || "");
+      if (phoneErr) newErrors.phone = phoneErr;
 
       if (!data.email) {
         newErrors.email = "Email address is required";
@@ -139,7 +190,8 @@ const Quote = () => {
     const payload = {
       name: data.name,
       email: data.email || undefined,
-      phone: data.phone,
+      // Backend expects: +919876543210 (no space, keep the + prefix)
+      phone: `${data.countryCode || "+91"}${data.phone}`,
       city: data.city || undefined,
       eventType: data.eventType || undefined,
       eventDate:
@@ -161,307 +213,29 @@ const Quote = () => {
     // ── Log: outgoing request for backend tracing ──
     console.log("[Quotation] ➤ Submitting to backend:", JSON.stringify(payload, null, 2));
 
-    // ── POST to backend ──
+    // ── POST to backend — only proceed to success screen if API confirms ──
     try {
       const response = await postQuotation(payload);
-      console.log("[Quotation] ✔ Backend response:", response);
-      toast.success("Consultation request received.", {
-        duration: 1500,
-        className: "bg-background border-primary text-foreground"
+      console.log("[Quotation] ✔ Backend response (201):", response);
+      toast.success("Consultation request received!", {
+        description: `We'll contact you at ${data.phone} within 24 hours.`,
+        duration: 3000,
+        className: "bg-background border-primary text-foreground",
       });
-    } catch (err) {
-      console.error("[Quotation] ✘ Backend error:", err);
-      toast.error("Could not save your request online, but your PDF quote is ready.", {
-        duration: 1500,
+    } catch (err: any) {
+      const msg = err?.message || "Could not submit your request. Please try again.";
+      console.error("[Quotation] ✘ Backend error:", msg);
+      // Show real backend validation/error message
+      toast.error("Submission Failed", {
+        description: msg,
+        duration: 5000,
       });
+      // Stop here — don't show success screen or generate PDF on failure
+      return;
     }
 
+    // Only reaches here on backend success
     setIsSubmitted(true);
-
-    // --------------------------------------------------------------------------
-    // GENERATE ENTERPRISE LEVEL PDF QUOTATION (PIXEL STUDIO)
-    // --------------------------------------------------------------------------
-    const doc = new jsPDF("p", "mm", "a4");
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-
-    const primaryDark: [number, number, number] = [17, 17, 17]; // #111111
-    const accentGold: [number, number, number] = [200, 162, 77]; // #C8A24D
-    const bgLightGray: [number, number, number] = [247, 247, 247]; // #F7F7F7
-    const textGray: [number, number, number] = [100, 100, 100];
-    const textLightGray: [number, number, number] = [160, 160, 160];
-
-    // Margins (20mm Left/Right, 25mm Top/Bottom)
-    const marginX = 20;
-    let yPos = 25;
-
-    // --- 1. HEADER SECTION ---
-
-    // Background Strip
-    doc.setFillColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.rect(0, 0, pageWidth, 45, "F");
-
-    // Left: Company Name
-    doc.setTextColor(accentGold[0], accentGold[1], accentGold[2]);
-    doc.setFont("times", "bold"); // Using 'times' as elegant serif fallback
-    doc.setFontSize(26);
-    doc.text("PIXEL STUDIO", marginX, 22);
-
-    // Subtitle
-    doc.setTextColor(220, 220, 220);
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(10);
-    doc.text("Cinematic Stories Crafted for Every Celebration", marginX, 30);
-
-    // Right: Document Info
-    doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text("QUOTATION ESTIMATE", pageWidth - marginX, 20, { align: "right", charSpace: 1 });
-
-    const currentDate = new Date().toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric' });
-    const refId = `PXC-${Math.floor(10000 + Math.random() * 90000)}`;
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(180, 180, 180);
-    doc.text(`DATE: ${currentDate.toUpperCase()}`, pageWidth - marginX, 28, { align: "right" });
-    doc.text(`REF ID: ${refId}`, pageWidth - marginX, 33, { align: "right" });
-
-    // Separation Line
-    doc.setDrawColor(accentGold[0], accentGold[1], accentGold[2]);
-    doc.setLineWidth(0.5);
-    doc.line(0, 45, pageWidth, 45);
-
-    yPos = 60;
-
-    // --- 2. CLIENT & EVENT DETAILS (Two-Column Grid) ---
-
-    const colWidth = (pageWidth - (marginX * 2) - 10) / 2; // 10mm gap between columns
-
-    // Left Card: BILL TO / CLIENT INFO
-    doc.setFillColor(bgLightGray[0], bgLightGray[1], bgLightGray[2]);
-    doc.rect(marginX, yPos, colWidth, 42, "F");
-
-    // Top Gold Accent Border
-    doc.setDrawColor(accentGold[0], accentGold[1], accentGold[2]);
-    doc.setLineWidth(1);
-    doc.line(marginX, yPos, marginX + colWidth, yPos);
-
-    // Client Title
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text("BILL TO / CLIENT INFO", marginX + 6, yPos + 8, { charSpace: 0.5 });
-
-    // Client Content
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(textLightGray[0], textLightGray[1], textLightGray[2]);
-    doc.text("Name:", marginX + 6, yPos + 16);
-    doc.text("Email:", marginX + 6, yPos + 23);
-    doc.text("Phone:", marginX + 6, yPos + 30);
-    doc.text("City:", marginX + 6, yPos + 37);
-
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.setFont("helvetica", "bold");
-    doc.text(data.name || "N/A", marginX + 22, yPos + 16);
-    doc.text(data.email || "N/A", marginX + 22, yPos + 23);
-    doc.text(data.phone || "N/A", marginX + 22, yPos + 30);
-    doc.text(data.city || "N/A", marginX + 22, yPos + 37);
-
-    // Right Card: EVENT DETAILS
-    const col2X = marginX + colWidth + 10;
-    doc.setFillColor(bgLightGray[0], bgLightGray[1], bgLightGray[2]);
-    doc.rect(col2X, yPos, colWidth, 42, "F");
-
-    // Top Gold Accent Border
-    doc.setDrawColor(accentGold[0], accentGold[1], accentGold[2]);
-    doc.setLineWidth(1);
-    doc.line(col2X, yPos, col2X + colWidth, yPos);
-
-    // Event Title
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.text("EVENT DETAILS", col2X + 6, yPos + 8, { charSpace: 0.5 });
-
-    // Event Content
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(textLightGray[0], textLightGray[1], textLightGray[2]);
-    doc.text("Event Type:", col2X + 6, yPos + 16);
-    doc.text("Event Date:", col2X + 6, yPos + 23);
-    doc.text("Guests:", col2X + 6, yPos + 30);
-    doc.text("Venue:", col2X + 6, yPos + 37);
-
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.setFont("helvetica", "bold");
-    doc.text(data.eventType || "N/A", col2X + 30, yPos + 16);
-
-    // Add logic to display single date or date range gracefully
-    const displayDate = data.eventType === "Wedding" && data.eventEndDate
-      ? `${data.eventDate} - ${data.eventEndDate}`
-      : (data.eventDate || "TBD");
-    doc.text(displayDate.length > 20 ? displayDate.substring(0, 18) + ".." : displayDate, col2X + 30, yPos + 23);
-
-    doc.text(data.guestCount || "TBD", col2X + 30, yPos + 30);
-
-    const venueStr = data.venue || "N/A";
-    const truncVenue = venueStr.length > 25 ? venueStr.substring(0, 22) + "..." : venueStr;
-    doc.text(truncVenue, col2X + 30, yPos + 37);
-
-    yPos += 58;
-
-    // Optional: Print wedding functions on PDF if wedding selected
-    if (data.eventType === "Wedding" && data.weddingFunctions && data.weddingFunctions.length > 0) {
-      doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.text("Functions Covered:", marginX, yPos - 8);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(textGray[0], textGray[1], textGray[2]);
-      doc.text(data.weddingFunctions.join(", "), marginX + 35, yPos - 8);
-      yPos += 5;
-    }
-
-    // --- 3. REQUESTED SERVICES TABLE ---
-
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.text("REQUESTED SERVICES", marginX, yPos, { charSpace: 0.5 });
-    yPos += 6;
-
-    const tableRows = data.services.length > 0
-      ? data.services.map((svc, i) => [`0${i + 1}`.slice(-2), svc, "Premium Coverage"])
-      : [["01", "No specific services selected", "-"]];
-
-    autoTable(doc, {
-      startY: yPos,
-      margin: { left: marginX, right: marginX, bottom: 25 }, // Pagination setup
-      head: [["#", "SERVICE DESCRIPTION", "STATUS"]],
-      body: tableRows,
-      theme: "plain",
-      headStyles: {
-        fillColor: accentGold,
-        textColor: 255,
-        fontStyle: "bold",
-        fontSize: 10,
-        cellPadding: 6,
-        halign: "left"
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: primaryDark,
-        fontSize: 10,
-        cellPadding: 6,
-      },
-      alternateRowStyles: {
-        fillColor: [250, 250, 250] // Subtle zebra stripes
-      },
-      columnStyles: {
-        0: { cellWidth: 15, fontStyle: "bold", textColor: accentGold },
-        1: { cellWidth: 'auto', fontStyle: "bold" },
-        2: { cellWidth: 45, halign: "right", textColor: textGray }
-      },
-      didDrawCell: (data) => {
-        // Add subtle bottom border to rows
-        if (data.row.section === 'body') {
-          doc.setDrawColor(230, 230, 230);
-          doc.setLineWidth(0.1);
-          doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
-        }
-      }
-    });
-
-    yPos = (doc as any).lastAutoTable.finalY + 15;
-
-    // Handle Page Break before Budget block if needed
-    if (yPos > pageHeight - 80) {
-      doc.addPage();
-      yPos = 25;
-    }
-
-    // --- 4. BUDGET SUMMARY BLOCK ---
-
-    // Additional Features/Vision text (Left side of Budget)
-    if (data.requirements) {
-      doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.text("Special Requirements / Vision:", marginX, yPos + 6);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(textGray[0], textGray[1], textGray[2]);
-      const splitReqs = doc.splitTextToSize(data.requirements, colWidth);
-      doc.text(splitReqs, marginX, yPos + 12);
-    }
-
-    // Budget Card (Right Aligned)
-    const budgetBoxW = 75;
-    const budgetBoxX = pageWidth - marginX - budgetBoxW;
-
-    doc.setFillColor(bgLightGray[0], bgLightGray[1], bgLightGray[2]);
-    doc.rect(budgetBoxX, yPos, budgetBoxW, 28, "F");
-
-    // Left Gold Border for Budget Box
-    doc.setDrawColor(accentGold[0], accentGold[1], accentGold[2]);
-    doc.setLineWidth(1.5);
-    doc.line(budgetBoxX, yPos, budgetBoxX, yPos + 28);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(textGray[0], textGray[1], textGray[2]);
-    doc.text("ESTIMATED BUDGET RANGE", budgetBoxX + 8, yPos + 10, { charSpace: 0.5 });
-
-    doc.setFontSize(16);
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.text(data.budget || "To Be Discussed", budgetBoxX + 8, yPos + 20);
-
-    yPos += 45;
-
-    // --- 5. TERMS & CONDITIONS (FOOTER) ---
-
-    // Footer will stick to the bottom if possible, or print where it is.
-    let footerY = yPos > pageHeight - 50 ? yPos + 10 : pageHeight - 35;
-
-    if (footerY > pageHeight - 15) {
-      doc.addPage();
-      footerY = 25;
-    }
-
-    // Thin separator line
-    doc.setDrawColor(220, 220, 220);
-    doc.setLineWidth(0.3);
-    doc.line(marginX, footerY - 5, pageWidth - marginX, footerY - 5);
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(9);
-    doc.setTextColor(primaryDark[0], primaryDark[1], primaryDark[2]);
-    doc.text("TERMS & CONDITIONS", marginX, footerY);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(120, 120, 120);
-
-    const terms = [
-      "1. This is a preliminary estimate strictly based on the provided requirements. The final quotation may vary after consultation.",
-      "2. Please mention Quote Ref ID in all future correspondence. Prices are valid for 15 days from the date of issue.",
-      "3. Travel, accommodation, and venue-specific shooting fees (if applicable) are not included unless explicitly stated."
-    ];
-
-    terms.forEach((term, idx) => {
-      doc.text(term, marginX, footerY + 6 + (idx * 5));
-    });
-
-    // --------------------------------------------------------------------------
-    // SAVE THE FILE
-    // --------------------------------------------------------------------------
-    doc.save(`PIXEL_STUDIO_Quote_${data.name.replace(/\s+/g, '_') || "Summary"}.pdf`);
 
     // Simulate Reset
     setTimeout(() => {
@@ -584,19 +358,53 @@ const Quote = () => {
                         required
                       />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <InputField
-                          label="Mobile Number"
-                          value={data.phone}
-                          onChange={(v) => {
-                            const digitsOnly = v.replace(/\D/g, '').slice(0, 10);
-                            setField("phone", digitsOnly);
-                          }}
-                          type="tel"
-                          placeholder="Enter your mobile number"
-                          error={errors.phone}
-                          maxLength={10}
-                          required
-                        />
+                        <div className="group w-full">
+                          <label className="block text-xs tracking-editorial uppercase font-body text-muted-foreground/60 mb-3 transition-colors group-focus-within:text-primary">
+                            Mobile Number <span className="text-primary">*</span>
+                          </label>
+                          <div className="flex relative">
+                            <Select
+                              value={data.countryCode || "+91"}
+                              onValueChange={(value) => {
+                                setField("countryCode", value);
+                                // Reset phone so stale digits from another country don't persist
+                                setField("phone", "");
+                              }}
+                            >
+                              <SelectTrigger className="bg-[#0F0F14] border border-[#1E1E26] border-r-0 rounded-l-[10px] rounded-r-none h-[56px] w-[90px] min-w-[90px] px-0 text-foreground font-body text-sm outline-none focus:ring-0 focus:ring-offset-0 focus:border-primary focus:z-10 transition-all duration-300 cursor-pointer [&>svg]:hidden flex justify-center items-center text-center [&>span]:line-clamp-none [&>span]:flex [&>span]:justify-center [&>span]:w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-[#0F0F14] border-[#1E1E26] text-foreground min-w-[90px] w-[90px] rounded-lg shadow-xl">
+                                {COUNTRY_OPTIONS.map((c) => (
+                                  <SelectItem
+                                    key={c.code}
+                                    value={c.code}
+                                    className="cursor-pointer focus:bg-[#1E1E26] focus:text-white transition-colors py-3 pl-[30px] pr-2 flex justify-start items-center rounded-md"
+                                  >
+                                    <div className="flex flex-col items-center justify-center gap-[4px] w-full -ml-[2px]">
+                                      <span className="text-[12px] font-bold text-white tracking-widest leading-none">{c.abbr}</span>
+                                      <span className="text-[13px] text-white/80 leading-none">{c.code}</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <input
+                              type="tel"
+                              value={data.phone}
+                              onChange={(e) => {
+                                const rule = COUNTRY_PHONE_RULES[data.countryCode || "+91"];
+                                const maxLen = rule ? rule.digits : 15;
+                                const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, maxLen);
+                                setField("phone", digitsOnly);
+                              }}
+                              placeholder={`Enter ${COUNTRY_PHONE_RULES[data.countryCode || "+91"]?.digits ?? ""}-digit number`}
+                              maxLength={COUNTRY_PHONE_RULES[data.countryCode || "+91"]?.digits ?? 15}
+                              className="w-full bg-[#0F0F14] border border-[#1E1E26] rounded-r-[10px] h-[56px] px-6 text-foreground font-body text-base outline-none focus:border-primary focus:shadow-[0_0_20px_rgba(198,161,91,0.15)] transition-all duration-300 placeholder:text-[#6B6B76]"
+                            />
+                          </div>
+                          {errors.phone && <p className="text-destructive text-xs mt-2 font-light tracking-wide">{errors.phone}</p>}
+                        </div>
                         <InputField
                           label="Email Address"
                           value={data.email}
@@ -755,9 +563,22 @@ const Quote = () => {
 
               <button
                 onClick={step < totalSteps ? handleNext : handleSubmit}
-                className="bg-transparent border border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(198,161,91,0.3)] hover:scale-[1.02]"
+                disabled={step === totalSteps && isSubmitting}
+                className={`bg-transparent border border-[#C6A15B] text-[#C6A15B] font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 flex items-center gap-3 ${step === totalSteps && isSubmitting
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-[#C6A15B] hover:text-black hover:shadow-[0_10px_30px_rgba(198,161,91,0.3)] hover:scale-[1.02]"
+                  }`}
               >
-                {step < totalSteps ? "Next Step" : "Request Consultation"}
+                {step === totalSteps && isSubmitting ? (
+                  <>
+                    {/* Spinner */}
+                    <svg className="animate-spin h-4 w-4 text-[#C6A15B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                    Submitting...
+                  </>
+                ) : step < totalSteps ? "Next Step" : "Request Consultation"}
               </button>
             </div>
           </div>
