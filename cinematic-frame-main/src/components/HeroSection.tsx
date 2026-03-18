@@ -112,49 +112,49 @@ const HeroSection = React.memo(() => {
             </p>
             <Link
               to="/quote"
-              className="inline-block border font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:scale-[1.02] bg-transparent border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black"
+              className="inline-block border font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[12px] transition-all duration-300 hover:scale-[1.02] bg-transparent border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black"
             >
               Get Your Quote
             </Link>
           </motion.div>
         </div>
+      </motion.div>
 
-        {/* Slide indicators */}
-        <div className="absolute bottom-10 left-8 flex gap-3 z-20">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={`h-[2px] transition-all duration-300 rounded-full ${i === current ? "w-12 bg-primary" : "w-6 bg-white/30 hover:bg-white/50"}`}
-            />
-          ))}
+      {/* Slide indicators - Moved outside scaling container to prevent artifacts */}
+      <div className="absolute bottom-10 left-8 flex gap-3 z-30">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`h-[2px] transition-all duration-300 rounded-full ${i === current ? "w-12 bg-primary shadow-[0_0_8px_rgba(198,161,91,0.5)]" : "w-6 bg-white/30 hover:bg-white/50"}`}
+          />
+        ))}
+      </div>
+
+      {/* Premium Scroll Indicator - Moved outside scaling container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 1 }}
+        className="absolute bottom-10 right-12 z-30 hidden md:flex flex-col items-center gap-4 cursor-pointer group"
+        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
+      >
+        <span className="text-[9px] uppercase tracking-[0.4em] font-medium text-white/50 group-hover:text-[#C6A15B] transition-colors duration-500">
+          Scroll
+        </span>
+        <div className="relative w-[1px] h-16 bg-white/10 overflow-hidden flex justify-center">
+          <motion.div
+            className="absolute top-0 w-[2px] h-[40%] bg-gradient-to-b from-transparent via-[#C6A15B] to-[#C6A15B] blur-[0.5px]"
+            animate={{
+              y: ["-100%", "300%"],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
         </div>
-
-        {/* Premium Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="absolute bottom-10 right-12 z-20 hidden md:flex flex-col items-center gap-4 cursor-pointer group"
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
-        >
-          <span className="text-[9px] uppercase tracking-[0.4em] font-medium text-white/50 group-hover:text-[#C6A15B] transition-colors duration-500">
-            Scroll
-          </span>
-          <div className="relative w-[1px] h-16 bg-white/10 overflow-hidden flex justify-center">
-            <motion.div
-              className="absolute top-0 w-[2px] h-[40%] bg-gradient-to-b from-transparent via-[#C6A15B] to-[#C6A15B] blur-[0.5px]"
-              animate={{
-                y: ["-100%", "300%"],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-          </div>
-        </motion.div>
       </motion.div>
     </section>
   );

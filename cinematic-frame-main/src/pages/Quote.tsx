@@ -600,7 +600,7 @@ const Quote = () => {
               <Users size={20} />
             </div>
             <div>
-              <h4 className="text-white font-medium font-body mb-1">500+ Happy Clients</h4>
+              <h4 className="text-white font-medium font-body mb-1">1500+ Happy Clients</h4>
               <p className="text-white/40 text-sm">Trusted by many</p>
             </div>
           </div>
