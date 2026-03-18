@@ -15,7 +15,7 @@ const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Reception", "Baby S
 const serviceOptions = [
   "Photography", "Cinematic Video", "Drone", "Album", "Live Streaming"
 ];
-const budgetRanges = ["< ₹50,000", "₹50,000 - ₹1,00,000", "₹1,00,000 - ₹3,00,000", "₹3,00,000 - ₹5,00,000", "₹5,00,000+"];
+const budgetRanges = ["< ₹50k", "₹50k - ₹1L", "₹1L - ₹3L", "₹3L - ₹5L", "₹5L+"];
 const weddingFunctionsList = [
   "Engagement", "Mandvo", "Pithi / Haldi", "Mehendi", "Garba / Sangeet", "Wedding Ceremony", "Reception", "Vana Rasam"
 ];

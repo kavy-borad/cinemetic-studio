@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Camera, Clock, Heart } from "lucide-react";
 import { motion, useInView, animate } from "framer-motion";
 import PlaceholderImage from "./PlaceholderImage";
@@ -29,7 +28,6 @@ const Counter = ({ value, duration = 2 }: { value: number; duration?: number }) 
 };
 
 const AboutSection = () => {
-    const { ref, isVisible } = useScrollReveal(0.2);
 
     return (
         <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-background relative overflow-hidden">
@@ -37,10 +35,12 @@ const AboutSection = () => {
                 <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                     {/* Left Side: Image */}
-                    <div
-                        ref={ref}
-                        className={`relative opacity-0 ${isVisible ? "animate-cinematic-fade-in" : ""}`}
-                        style={{ transitionDelay: "0.2s" }}
+                    <motion.div
+                        initial={{ opacity: 0, x: -80 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        className="relative"
                     >
                         <div className="relative overflow-hidden rounded-xl group">
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10" />
@@ -50,21 +50,42 @@ const AboutSection = () => {
                                 className="w-full h-[600px] object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
                             />
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Right Side: Content */}
-                    <div
-                        className={`space-y-8 opacity-0 ${isVisible ? "animate-cinematic-reveal-up" : ""}`}
-                        style={{ animationDelay: "0.4s" }}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                        variants={{
+                            visible: {
+                                transition: {
+                                    staggerChildren: 0.15
+                                }
+                            }
+                        }}
+                        className="space-y-8"
                     >
-                        <div className="space-y-4">
+                        <motion.div 
+                            variants={{
+                                hidden: { opacity: 0, y: 30 },
+                                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                            }}
+                            className="space-y-4"
+                        >
 
                             <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading text-foreground leading-tight">
                                 About Us
                             </h2>
-                        </div>
+                        </motion.div>
 
-                        <div className="space-y-6 text-muted-foreground font-body leading-relaxed font-light">
+                        <motion.div 
+                            variants={{
+                                hidden: { opacity: 0, y: 30 },
+                                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                            }}
+                            className="space-y-6 text-muted-foreground font-body leading-relaxed font-light"
+                        >
                             <p>
                                 We believe that photography is more than just taking pictures; it’s about freezing time and preserving the raw emotions that define your most special moments. With a passion for cinematic storytelling, we craft visual narratives that transcend the ordinary.
                             </p>
@@ -74,30 +95,42 @@ const AboutSection = () => {
                             <p>
                                 With years of experience documenting love stories and grand celebrations, we bring a calm, professional presence to every event, ensuring you feel comfortable and authentic in front of the lens.
                             </p>
-                        </div>
+                        </motion.div>
 
-                        <div className="pt-4">
+                        <motion.div 
+                            variants={{
+                                hidden: { opacity: 0, y: 30 },
+                                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                            }}
+                            className="pt-4"
+                        >
                             <Link
                                 to="/quote"
                                 className="inline-block bg-transparent border border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(198,161,91,0.3)] hover:scale-[1.02]"
                             >
                                 Get Your Quote
                             </Link>
-                        </div>
+                        </motion.div>
 
                         {/* Highlights */}
-                        <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50">
+                        <motion.div 
+                            variants={{
+                                hidden: { opacity: 0 },
+                                visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+                            }}
+                            className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50"
+                        >
                             {[
-                                { label: "Total Weddings", value: 150, delay: 0, icon: Heart },
-                                { label: "Happy Clients", value: 500, delay: 0.15, icon: Camera },
-                                { label: "Years Experience", value: 10, delay: 0.3, icon: Clock }
+                                { label: "Total Weddings", value: 150, icon: Heart },
+                                { label: "Happy Clients", value: 500, icon: Camera },
+                                { label: "Years Experience", value: 10, icon: Clock }
                             ].map((item, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 0.6, delay: item.delay, ease: "easeOut" }}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                                    }}
                                     className="group cursor-default text-center md:text-left"
                                 >
                                     <item.icon className="w-5 h-5 text-primary mb-2 mx-auto md:mx-0 opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -109,8 +142,8 @@ const AboutSection = () => {
                                     </p>
                                 </motion.div>
                             ))}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 </div>
             </div>
         </section>
