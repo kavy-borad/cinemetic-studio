@@ -38,7 +38,7 @@ export const CursorFollower = ({ isHovering }: CursorFollowerProps) => {
     return (
         <motion.div
             className={cn(
-                "fixed top-0 left-0 w-20 h-20 rounded-full border border-[#C6A15B] pointer-events-none z-50 flex items-center justify-center mix-blend-difference",
+                "fixed top-0 left-0 w-20 h-20 rounded-full border border-primary pointer-events-none z-50 flex items-center justify-center mix-blend-difference",
                 "transition-opacity duration-300"
             )}
             style={{
@@ -50,7 +50,7 @@ export const CursorFollower = ({ isHovering }: CursorFollowerProps) => {
                 scale: isHovering ? 1 : 0.5,
             }}
         >
-            <span className="text-[#C6A15B] text-xs font-medium tracking-widest uppercase">
+            <span className="text-primary text-xs font-medium tracking-widest uppercase">
                 View
             </span>
         </motion.div>

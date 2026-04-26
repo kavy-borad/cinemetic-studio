@@ -73,7 +73,7 @@ const CTASection = () => {
                 style={{
                     background: useTransform(
                         [mouseX, mouseY],
-                        ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, rgba(198,161,91,0.15) 0%, transparent 60%)`
+                        ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, hsl(var(--primary) / 0.15) 0%, transparent 60%)`
                     )
                 }}
             />

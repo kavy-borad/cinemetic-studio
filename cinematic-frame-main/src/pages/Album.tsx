@@ -70,7 +70,7 @@ const Album = () => {
 
             {/* Back Button */}
             <div className="fixed top-24 left-6 md:left-12 z-40 mix-blend-difference text-white">
-                <Link to="/portfolio" className="flex items-center gap-2 text-xs tracking-editorial uppercase hover:text-[#C6A15B] transition-colors duration-300">
+                <Link to="/portfolio" className="flex items-center gap-2 text-xs tracking-editorial uppercase hover:text-primary transition-colors duration-300">
                     <ChevronLeft size={16} /> Back to Portfolio
                 </Link>
             </div>
@@ -97,7 +97,7 @@ const Album = () => {
                         transition={{ duration: 0.1, ease: "easeOut" }}
                         className="flex flex-col items-center w-full"
                     >
-                        <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+                        <span className="text-primary text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
                             Est. {albumDate.split(' ').pop()}
                         </span>
                         <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full capitalize">
@@ -105,7 +105,7 @@ const Album = () => {
                         </h1>
                         <div className="flex items-center justify-center gap-6 text-white/60 text-sm tracking-widest font-light uppercase mb-12">
                             <span>{albumLocation}</span>
-                            <span className="w-1 h-1 bg-[#C6A15B] rounded-full" />
+                            <span className="w-1 h-1 bg-primary rounded-full" />
                             <span>{albumDate}</span>
                         </div>
 
@@ -114,7 +114,7 @@ const Album = () => {
                             initial={{ width: 0 }}
                             animate={{ width: "100px" }}
                             transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
-                            className="h-px bg-[#C6A15B] opacity-60"
+                            className="h-px bg-primary opacity-60"
                         />
                     </motion.div>
                 </div>
@@ -126,7 +126,7 @@ const Album = () => {
                 {/* API Loading */}
                 {portfolioLoading && (
                     <div className="flex flex-col items-center justify-center py-24 gap-4">
-                        <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         <p className="text-white/40 text-xs tracking-editorial uppercase">Loading album from API...</p>
                     </div>
                 )}
@@ -179,7 +179,7 @@ const Album = () => {
 
                                 {/* Premium Golden Glassmorphism Hover Overlay */}
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center backdrop-blur-[2px]">
-                                    <span className="bg-[#C6A15B]/20 backdrop-blur-md p-4 rounded-full text-white ring-1 ring-[#C6A15B]/60 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 ease-out shadow-[0_0_20px_rgba(198,161,91,0.4)]">
+                                    <span className="bg-primary/20 backdrop-blur-md p-4 rounded-full text-white ring-1 ring-[#C6A15B]/60 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 ease-out shadow-[0_0_20px_hsl(var(--primary) / 0.4)]">
                                         <Maximize2 size={24} strokeWidth={1.5} className="text-white drop-shadow-md" />
                                     </span>
                                 </div>

@@ -69,10 +69,10 @@ const CategoryCard = ({
             </div>
 
             {/* Gold Underline Animation */}
-            <div className="h-[2px] bg-[#C6A15B] mt-6 w-16 group-hover:w-32 transition-all duration-700 ease-in-out" />
+            <div className="h-[2px] bg-primary mt-6 w-16 group-hover:w-32 transition-all duration-700 ease-in-out" />
 
             <div className="mt-4 overflow-hidden">
-              <p className="text-[#C6A15B] text-xs tracking-editorial uppercase transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-100">
+              <p className="text-primary text-xs tracking-editorial uppercase transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-100">
                 Explore Collection
               </p>
             </div>
@@ -109,7 +109,7 @@ const Portfolio = () => {
       <div
         className="fixed inset-0 pointer-events-none z-0"
         style={{
-          background: "radial-gradient(circle at top, rgba(198,161,91,0.05), transparent 50%), #0B0B0E"
+          background: "radial-gradient(circle at top, hsl(var(--primary) / 0.05), transparent 50%), #0B0B0E"
         }}
       />
 
@@ -122,7 +122,7 @@ const Portfolio = () => {
           transition={{duration: 0.1, ease: "easeOut" }}
           className="max-w-5xl mx-auto flex flex-col items-center"
         >
-          <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+          <span className="text-primary text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
             Our Work
           </span>
           <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none">
@@ -137,7 +137,7 @@ const Portfolio = () => {
             initial={{ width: 0 }}
             animate={{ width: "100px" }}
             transition={{duration: 0.1, delay: 0.15, ease: "circOut" }}
-            className="h-px bg-[#C6A15B] opacity-60"
+            className="h-px bg-primary opacity-60"
           />
         </motion.div>
       </section>
@@ -148,7 +148,7 @@ const Portfolio = () => {
         {/* Loading State */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-32 gap-4">
-            <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             <p className="text-white/40 text-xs tracking-editorial uppercase">Loading categories...</p>
           </div>
         )}

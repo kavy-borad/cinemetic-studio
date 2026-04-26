@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const eventTypes = ["Wedding", "Pre-Wedding", "Engagement", "Reception", "Baby Shower", "Birthday", "Corporate", "Other"];
 const serviceOptions = [
-  "Photography", "Cinematic Video", "Drone", "Album", "Live Streaming"
+  "Photography", "Cinematic Video", "Drone", "Album", "Live Streaming", "Viral Trend Reels"
 ];
 const budgetRanges = ["< ₹50k", "₹50k - ₹1L", "₹1L - ₹3L", "₹3L - ₹5L", "₹5L+"];
 const weddingFunctionsList = [

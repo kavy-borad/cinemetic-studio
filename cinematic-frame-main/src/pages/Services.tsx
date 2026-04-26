@@ -127,12 +127,12 @@ const CustomCursor = ({ isVisible, position }: { isVisible: boolean; position: {
         opacity: isVisible ? 1 : 0,
         scale: isVisible ? 1 : 0.5
       }}
-      transition={{ type: "spring", damping: 40, stiffness: 200 }}
+      transition={{ ease: [0.22, 1, 0.36, 1], duration: 0.8}}
       className="fixed w-[120px] h-[120px] pointer-events-none z-50 rounded-full"
       style={{
         left: 0,
         top: 0,
-        background: 'radial-gradient(circle, rgba(198,161,91,0.5) 0%, rgba(198,161,91,0.1) 50%, transparent 70%)',
+        background: 'radial-gradient(circle, hsl(var(--primary) / 0.5) 0%, hsl(var(--primary) / 0.1) 50%, transparent 70%)',
         filter: 'blur(10px)',
         mixBlendMode: 'plus-lighter'
       }}
@@ -194,7 +194,7 @@ const ServiceCard = ({ service, index, onHover, onLeave }: any) => {
       onMouseMove={handleMouseMove}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="relative bg-[#121218] border border-[#1E1E26] rounded-[14px] p-8 text-center transition-all duration-500 hover:border-[rgba(198,161,91,0.6)] group overflow-hidden cursor-none z-0 hover:z-20"
+      className="relative bg-[#121218] border border-[#1E1E26] rounded-[14px] p-8 text-center transition-all duration-500 hover:border-[hsl(var(--primary) / 0.6)] group overflow-hidden cursor-none z-0 hover:z-20"
       style={{
         boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
       }}
@@ -218,10 +218,10 @@ const ServiceCard = ({ service, index, onHover, onLeave }: any) => {
       {/* Content */}
       <div className="relative z-10">
         <motion.div
-          className="w-16 h-16 mx-auto mb-6 rounded-full border border-[#C6A15B]/30 flex items-center justify-center text-[#C6A15B]/60 transition-all duration-400"
+          className="w-16 h-16 mx-auto mb-6 rounded-full border border-primary/30 flex items-center justify-center text-primary/60 transition-all duration-400"
           whileHover={{ scale: 1.2 }}
         >
-          <Icon size={28} strokeWidth={1.5} className="group-hover:text-[#C6A15B] transition-colors duration-400" />
+          <Icon size={28} strokeWidth={1.5} className="group-hover:text-primary transition-colors duration-400" />
         </motion.div>
         <h3 className="font-heading text-2xl text-foreground mb-3 tracking-tight">
           {service.title}
@@ -279,7 +279,7 @@ const TiltCard = ({ addon, index }: { addon: any, index: number }) => {
           filter: `brightness(${brightness})`,
           transform: "translateZ(20px)"
         }}
-        className="relative h-64 overflow-hidden rounded-[13px] border border-[#1E1E26] group-hover:border-[#C6A15B]/50 transition-colors duration-300 shadow-2xl"
+        className="relative h-64 overflow-hidden rounded-[13px] border border-[#1E1E26] group-hover:border-primary/50 transition-colors duration-300 shadow-2xl"
       >
         <motion.img
           src={addon.image}
@@ -343,7 +343,7 @@ const Services = () => {
     <main
       className="min-h-screen relative overflow-hidden"
       style={{
-        background: 'radial-gradient(circle at top, rgba(198,161,91,0.06), transparent 50%), #0B0B0E'
+        background: 'radial-gradient(circle at top, hsl(var(--primary) / 0.06), transparent 50%), #0B0B0E'
       }}
     >
       <CustomCursor isVisible={cursorVisible} position={cursorPosition} />
@@ -358,7 +358,7 @@ const Services = () => {
           transition={{ duration: 0.1, ease: "easeOut" }}
           className="max-w-5xl mx-auto flex flex-col items-center"
         >
-          <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+          <span className="text-primary text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
             What We Offer
           </span>
           <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full">
@@ -373,7 +373,7 @@ const Services = () => {
             initial={{ width: 0 }}
             animate={isVisible ? { width: "100px" } : {}}
             transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
-            className="h-px bg-[#C6A15B] opacity-60"
+            className="h-px bg-primary opacity-60"
           />
         </motion.div>
       </section>
@@ -428,12 +428,12 @@ const Services = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.1 }}
             >
-              <h2 className="text-[#C6A15B] font-body text-sm tracking-[0.3em] uppercase mb-4">
+              <h2 className="text-primary font-body text-sm tracking-[0.3em] uppercase mb-4">
                 The Pixel Experience
               </h2>
               <h3 className="font-heading text-6xl md:text-8xl text-white leading-[0.9] mb-6">
                 The Pixel <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C6A15B] to-[#E5D5A6]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#E5D5A6]">
                   Experience.
                 </span>
               </h3>
@@ -454,7 +454,7 @@ const Services = () => {
                 transition={{ duration: 0.1, delay: index * 0.1 }}
                 onMouseEnter={() => setActiveFeature(index)}
                 className={`group relative p-6 cursor-pointer border-l-2 transition-all duration-500 ${activeFeature === index
-                  ? "border-[#C6A15B] bg-white/5"
+                  ? "border-primary bg-white/5"
                   : "border-white/10 hover:border-white/30"
                   }`}
               >
@@ -474,7 +474,7 @@ const Services = () => {
                       }}
                       className="overflow-hidden"
                     >
-                      <p className="text-[#C6A15B] font-body font-light text-sm mt-2">
+                      <p className="text-primary font-body font-light text-sm mt-2">
                         {feature.description}
                       </p>
                     </motion.div>
@@ -486,7 +486,7 @@ const Services = () => {
                       opacity: activeFeature === index ? 1 : 0.2
                     }}
                   >
-                    <ArrowRight className="text-[#C6A15B]" size={24} />
+                    <ArrowRight className="text-primary" size={24} />
                   </motion.div>
                 </div>
               </motion.div>
@@ -523,7 +523,7 @@ const Services = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.18 }}
-                  className="group relative h-80 md:h-[350px] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-[0_20px_60px_rgba(198,161,91,0.2)] hover:-translate-y-2 hover:border-[#C6A15B]/50 cursor-pointer"
+                  className="group relative h-80 md:h-[350px] border border-white/10 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-[0_20px_60px_hsl(var(--primary) / 0.2)] hover:-translate-y-2 hover:border-primary/50 cursor-pointer"
                 >
                   <img
                     src={enhancement.image}
@@ -536,11 +536,11 @@ const Services = () => {
 
                   {/* Content Container */}
                   <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end z-10 transition-transform duration-500 transform group-hover:-translate-y-2">
-                    <div className="bg-black/30 backdrop-blur-md w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:border-[#C6A15B]/80 group-hover:bg-[#C6A15B]/20 transition-all duration-500">
-                      <Icon className="text-white group-hover:text-[#C6A15B] transition-colors duration-500" size={20} strokeWidth={2} />
+                    <div className="bg-black/30 backdrop-blur-md w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:border-primary/80 group-hover:bg-primary/20 transition-all duration-500">
+                      <Icon className="text-white group-hover:text-primary transition-colors duration-500" size={20} strokeWidth={2} />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-heading text-white mb-3 group-hover:text-[#C6A15B] transition-colors duration-400">
+                      <h3 className="text-3xl font-heading text-white mb-3 group-hover:text-primary transition-colors duration-400">
                         {enhancement.title}
                       </h3>
                       <p className="text-white/70 font-body text-base font-light leading-relaxed group-hover:text-white transition-colors duration-400">
@@ -566,19 +566,19 @@ const Services = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div>
-              <div className="text-5xl md:text-6xl font-heading text-[#C6A15B] mb-2">
+              <div className="text-5xl md:text-6xl font-heading text-primary mb-2">
                 <Counter end={500} suffix="+" />
               </div>
               <p className="text-white/50 font-body text-sm uppercase tracking-wide">Events Covered</p>
             </div>
             <div>
-              <div className="text-5xl md:text-6xl font-heading text-[#C6A15B] mb-2">
+              <div className="text-5xl md:text-6xl font-heading text-primary mb-2">
                 <Counter end={10} suffix="+" />
               </div>
               <p className="text-white/50 font-body text-sm uppercase tracking-wide">Years Experience</p>
             </div>
             <div>
-              <div className="text-5xl md:text-6xl font-heading text-[#C6A15B] mb-2">
+              <div className="text-5xl md:text-6xl font-heading text-primary mb-2">
                 <Counter end={24} suffix="h" />
               </div>
               <p className="text-white/50 font-body text-sm uppercase tracking-wide">Response Time</p>
@@ -610,7 +610,7 @@ const Services = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
             <Link
               to="/quote"
-              className="inline-block bg-transparent border border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(198,161,91,0.3)] hover:scale-[1.02]"
+              className="inline-block bg-transparent border border-primary text-primary hover:bg-primary hover:text-black font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[10px] transition-all duration-300 hover:shadow-[0_10px_30px_hsl(var(--primary) / 0.3)] hover:scale-[1.02]"
             >
               Get Your Quote
             </Link>

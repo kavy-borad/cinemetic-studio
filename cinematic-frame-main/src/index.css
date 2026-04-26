@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,54 +6,38 @@
 
 @layer base {
   :root {
-    /* User Requested Cinematic Dark Luxury Palette */
-    --background: 240 12% 5%;
-    /* #0B0B0E */
-    --foreground: 0 0% 100%;
-    /* #FFFFFF */
+    /* Eye-catching Modern Premium Palette */
+    --background: 220 20% 4%; /* Deeper, richer navy-black #080A10 */
+    --foreground: 210 20% 98%; /* Brilliant white for text #F8FAFC */
 
-    --card: 240 14% 8%;
-    /* Surface #121218 */
-    --card-foreground: 0 0% 100%;
+    --card: 220 20% 8%; /* Slightly lighter for contrast #10141D */
+    --card-foreground: 210 20% 98%;
 
-    --popover: 240 14% 8%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 20% 8%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 39 48% 57%;
-    /* Luxury Gold #C6A15B */
-    --primary-foreground: 240 12% 5%;
+    --primary: 43 74% 49%; /* Vibrant eye-catching Gold #D4AF37 */
+    --primary-foreground: 220 20% 4%;
 
-    --secondary: 240 14% 8%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 215 15% 15%; /* #20242B */
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 240 14% 8%;
-    --muted-foreground: 240 5% 65%;
-    /* #A1A1AA */
+    --muted: 215 15% 15%;
+    --muted-foreground: 215 15% 65%; /* Clear muted text */
 
-    --accent: 39 48% 57%;
-    --accent-foreground: 240 12% 5%;
+    --accent: 43 74% 49%;
+    --accent-foreground: 220 20% 4%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 240 12% 13%;
-    /* #1E1E26 */
-    --input: 240 12% 13%;
-    --ring: 39 48% 57%;
+    --border: 215 15% 20%; /* More visible border */
+    --input: 215 15% 20%;
+    --ring: 43 74% 49%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem; /* Sharper, more professional corners */
 
-    --surface: 240 14% 8%;
-    /* #121218 */
-
-    --sidebar-background: 240 12% 5%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 39 48% 57%;
-    --sidebar-primary-foreground: 240 12% 5%;
-    --sidebar-accent: 240 14% 8%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 240 12% 13%;
-    --sidebar-ring: 39 48% 57%;
+    --surface: 220 20% 8%;
   }
 }
 
@@ -63,75 +47,71 @@
   }
 
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-weight: 300;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.015em;
     overflow-x: hidden;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 400;
-    letter-spacing: 0.02em;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    @apply text-foreground;
   }
 }
 
 @layer components {
   .text-gold-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(40 45% 56%), hsl(40 60% 70%), hsl(40 45% 56%));
+    background-image: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 90% 65%), hsl(43 74% 49%));
   }
 
   .border-gold-gradient {
-    border-image: linear-gradient(135deg, hsl(40 45% 56%), hsl(40 60% 70%)) 1;
+    border-image: linear-gradient(135deg, hsl(43 74% 49%), hsl(43 90% 65%)) 1;
   }
 
   .cinematic-overlay {
     background: linear-gradient(180deg,
-        hsla(240, 10%, 4%, 0.3) 0%,
-        hsla(240, 10%, 4%, 0.1) 40%,
-        hsla(240, 10%, 4%, 0.5) 80%,
-        hsla(240, 10%, 4%, 0.85) 100%);
+        hsla(220, 20%, 4%, 0.1) 0%,
+        hsla(220, 20%, 4%, 0.4) 40%,
+        hsla(220, 20%, 4%, 0.7) 80%,
+        hsla(220, 20%, 4%, 0.95) 100%);
   }
 
   .section-padding {
-    @apply px-6 md:px-12 lg:px-24 py-24 md:py-32 lg:py-40;
+    @apply px-6 md:px-12 lg:px-24 py-20 md:py-28 lg:py-36;
   }
 
   .luxury-divider {
-    @apply w-16 h-px bg-primary mx-auto;
+    @apply w-24 h-[2px] mx-auto;
+    background: linear-gradient(90deg, transparent, hsl(43 74% 49%), transparent);
   }
 }
 
 @layer utilities {
   .font-heading {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Cinzel', serif;
   }
 
   .font-body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
   }
 
   .tracking-luxury {
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
   }
 
   .tracking-editorial {
-    letter-spacing: 0.08em;
+    letter-spacing: 0.15em;
   }
 }
 
-/* 5. GLOBAL SMOOTH SCROLL (Lenis Recommended CSS) */
 html.lenis,
 html.lenis body {
   height: auto;
@@ -153,29 +133,22 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* 3. GOLD MICRO-INTERACTIONS */
 @layer base {
-
-  a,
-  button {
-    @apply transition-colors duration-300;
+  a, button {
+    @apply transition-all duration-500 ease-out;
   }
 
-  a:hover,
-  button:hover {
-    color: #C6A15B;
-    border-color: #C6A15B;
+  a:hover, button:hover {
+    color: hsl(43 74% 49%);
   }
 }
 
-/* Global Cinematic Atmosphere and "P" Background */
+/* Eye-catching premium background subtle texture */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05;
+  background: radial-gradient(circle at 50% 0%, hsla(43, 74%, 49%, 0.03) 0%, transparent 60%);
   pointer-events: none;
-  z-index: 50;
-  mix-blend-mode: overlay;
+  z-index: -1;
 }

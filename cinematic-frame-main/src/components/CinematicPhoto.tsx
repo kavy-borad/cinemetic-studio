@@ -199,7 +199,7 @@ export const CinematicPhoto: React.FC<CinematicPhotoProps> = ({
                 )}
 
                 {/* 6. GOLD ACCENT INTERACTION: Border glow */}
-                <div className="absolute inset-0 rounded-xl border border-[#C6A15B] opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 rounded-xl border border-primary opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none" />
 
                 {/* Glare Overlay */}
                 <motion.div

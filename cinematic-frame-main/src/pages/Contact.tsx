@@ -22,7 +22,7 @@ const Contact = () => {
     const fastEase = "easeOut";
 
     return (
-        <div className="bg-[#050505] min-h-screen text-white selection:bg-[#C6A15B]/30 flex flex-col font-body overflow-x-hidden">
+        <div className="bg-[#050505] min-h-screen text-white selection:bg-primary/30 flex flex-col font-body overflow-x-hidden">
             <Navigation />
 
             {/* SECTION 1 – Cinematic Hero */}
@@ -69,13 +69,13 @@ const Contact = () => {
                     >
                         <Link
                             to="/quote"
-                            className="bg-[#C6A15B] text-[#050505] font-bold tracking-[0.2em] uppercase text-xs px-10 py-4 rounded-full transition-all duration-300 hover:bg-white hover:scale-[1.03] shadow-[0_0_20px_rgba(198,161,91,0.2)]"
+                            className="bg-primary text-[#050505] font-bold tracking-[0.2em] uppercase text-xs px-10 py-4 rounded-full transition-all duration-300 hover:bg-white hover:scale-[1.03] shadow-[0_0_20px_hsl(var(--primary) / 0.2)]"
                         >
                             Get Your Quote
                         </Link>
                         <a
                             href="https://wa.me/919876543210"
-                            className="bg-transparent border border-white/20 text-white font-bold tracking-[0.2em] uppercase text-xs px-10 py-4 rounded-full transition-all duration-300 hover:border-[#C6A15B] hover:text-[#C6A15B] hover:scale-[1.03]"
+                            className="bg-transparent border border-white/20 text-white font-bold tracking-[0.2em] uppercase text-xs px-10 py-4 rounded-full transition-all duration-300 hover:border-primary hover:text-primary hover:scale-[1.03]"
                         >
                             WhatsApp / Call Now
                         </a>
@@ -99,12 +99,12 @@ const Contact = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: 0.4, delay: card.delay, ease: fastEase }}
-                            className="group relative bg-[#121218] border border-[#1E1E26] rounded-[20px] p-8 flex flex-col items-center text-center transition-all duration-300 hover:border-[#C6A15B] hover:shadow-[0_0_20px_rgba(198,161,91,0.2)] hover:-translate-y-[5px]"
+                            className="group relative bg-[#121218] border border-[#1E1E26] rounded-[20px] p-8 flex flex-col items-center text-center transition-all duration-300 hover:border-primary hover:shadow-[0_0_20px_hsl(var(--primary) / 0.2)] hover:-translate-y-[5px]"
                         >
-                            <div className="w-16 h-16 rounded-full border border-[#C6A15B]/30 flex items-center justify-center text-[#C6A15B] mb-6 group-hover:border-[#C6A15B] group-hover:bg-[#C6A15B]/10 transition-all duration-300">
+                            <div className="w-16 h-16 rounded-full border border-primary/30 flex items-center justify-center text-primary mb-6 group-hover:border-primary group-hover:bg-primary/10 transition-all duration-300">
                                 <card.icon size={24} strokeWidth={1.5} />
                             </div>
-                            <h3 className="text-xl font-heading text-white mb-2 group-hover:text-[#C6A15B] transition-colors duration-300">{card.title}</h3>
+                            <h3 className="text-xl font-heading text-white mb-2 group-hover:text-primary transition-colors duration-300">{card.title}</h3>
                             <p className="text-white/50 text-sm font-light">{card.desc}</p>
                         </motion.a>
                     ))}
@@ -137,7 +137,7 @@ const Contact = () => {
                                 Sindhu Bhavan Road, Thaltej,<br />
                                 Ahmedabad, Gujarat – 380054
                             </p>
-                            <p className="text-sm border-l-2 border-[#C6A15B] pl-4 italic text-white/50">
+                            <p className="text-sm border-l-2 border-primary pl-4 italic text-white/50">
                                 Valet parking available. We recommend arriving 10 minutes prior to your scheduled consultation.
                             </p>
                         </motion.div>
@@ -152,7 +152,7 @@ const Contact = () => {
                                 href="https://maps.google.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-3 px-8 py-3 bg-transparent border border-[#C6A15B] text-[#C6A15B] text-xs font-bold tracking-[0.2em] uppercase rounded-full hover:bg-[#C6A15B] hover:text-[#050505] transition-all duration-300 hover:scale-[1.03]"
+                                className="inline-flex items-center gap-3 px-8 py-3 bg-transparent border border-primary text-primary text-xs font-bold tracking-[0.2em] uppercase rounded-full hover:bg-primary hover:text-[#050505] transition-all duration-300 hover:scale-[1.03]"
                             >
                                 Get Directions <ArrowUpRight size={16} />
                             </a>
@@ -202,8 +202,8 @@ const Contact = () => {
                             Visit our studio for a personalized consultation
                         </h2>
                         <div className="space-y-4 mb-10 text-white/50 font-light">
-                            <p className="flex items-center gap-3"><Clock size={16} className="text-[#C6A15B]" /> Mon – Sat: 10:00 AM – 7:00 PM</p>
-                            <p className="flex items-center gap-3"><span className="w-4 h-4 rounded-full border border-[#C6A15B] flex items-center justify-center text-[10px] pb-px text-[#C6A15B]"> i </span> Sunday available by exclusive appointment only.</p>
+                            <p className="flex items-center gap-3"><Clock size={16} className="text-primary" /> Mon – Sat: 10:00 AM – 7:00 PM</p>
+                            <p className="flex items-center gap-3"><span className="w-4 h-4 rounded-full border border-primary flex items-center justify-center text-[10px] pb-px text-primary"> i </span> Sunday available by exclusive appointment only.</p>
                         </div>
                     </motion.div>
                 </div>

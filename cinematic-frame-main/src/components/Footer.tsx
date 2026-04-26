@@ -17,38 +17,31 @@ const WhatsAppIcon = ({ size = 16, className = "" }: { size?: number; className?
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const footerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: footerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const marqueeX = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
 
   const columnVariants: Variants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    hidden: { opacity: 0, y: 40 },
     visible: (delay: number) => ({
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: { 
-        duration: 1.2, 
-        ease: [0.16, 1, 0.3, 1], 
+        duration: 0.8, 
+        ease: [0.22, 1, 0.36, 1], 
         delay 
       }
     })
   };
 
   return (
-    <footer ref={footerRef} className="relative bg-[#050505] text-white pt-24 pb-12 overflow-hidden border-t border-white/[0.02]">
+    <footer className="relative bg-[#050505] text-white pt-32 pb-12 overflow-hidden border-t border-white/[0.05]">
+      {/* Massive Cinematic Background Highlight / Light Leak */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-[80vh] bg-[radial-gradient(ellipse_at_bottom,hsl(var(--primary)_/_0.15),transparent_70%)] pointer-events-none z-0 mix-blend-screen" />
+      <div className="absolute top-0 right-0 w-[40vw] h-[40vh] bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)_/_0.05),transparent_70%)] pointer-events-none z-0" />
+      
       {/* Unique Background Marquee Layer */}
-      <div className="absolute top-1/4 left-0 w-full pointer-events-none z-0 opacity-[0.03] select-none">
-        <motion.h2 
-          style={{ x: marqueeX }}
-          className="text-[20vw] font-heading font-black whitespace-nowrap leading-none uppercase tracking-tighter"
-        >
-          Cinematic Excellence • Timeless Storytelling • Editorial Vision •
-        </motion.h2>
+      <div className="absolute top-20 left-0 w-full pointer-events-none z-0 opacity-[0.02] select-none">
+        <h2 className="text-[12vw] font-heading font-black whitespace-nowrap leading-none uppercase tracking-tighter animate-[marquee_60s_linear_infinite]">
+          Cinematic Excellence • Timeless Storytelling • Editorial Vision • Cinematic Excellence • Timeless Storytelling
+        </h2>
       </div>
 
       <div className="max-w-[1700px] mx-auto px-6 md:px-12 lg:px-24 relative z-10">
@@ -59,18 +52,16 @@ const Footer = () => {
             custom={0}
             initial="hidden"
             whileInView="visible"
-            whileHover={{ y: -10, scale: 1.01 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-50px" }}
             variants={columnVariants}
-            style={{ y: useTransform(scrollYProgress, [0, 1], [0, -30]) }}
-            className="lg:col-span-5 p-10 md:p-14 bg-white/[0.02] backdrop-blur-2xl border border-white/[0.05] rounded-[3rem] relative overflow-hidden group hover:border-primary/30 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-pointer"
+            className="lg:col-span-5 p-10 md:p-14 bg-[#0A0A0F]/80 backdrop-blur-3xl border border-white/[0.05] rounded-[3rem] relative overflow-hidden group hover:-translate-y-2 hover:border-primary/40 hover:shadow-[0_20px_50px_hsl(var(--primary)_/_0.15)] transition-all duration-700 ease-out cursor-pointer"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/20 transition-all duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/30 transition-all duration-700 ease-out" />
             
             <div className="relative z-10">
               <Link to="/" className="inline-flex items-center gap-4 mb-8 group/logo">
-                <h2 className="font-heading text-3xl md:text-3xl lg:text-3xl tracking-[0.2em] text-white group-hover/logo:text-primary transition-all duration-500 whitespace-nowrap">
+                <h2 className="font-heading text-3xl md:text-3xl lg:text-3xl tracking-[0.2em] text-white group-hover/logo:text-primary transition-colors duration-500 whitespace-nowrap">
                   PIXCEL STUDIO
                 </h2>
                 {/* Unit Red Cinematic Dot */}
@@ -81,10 +72,10 @@ const Footer = () => {
               </Link>
 
               <div className="space-y-4 max-w-lg">
-                <p className="text-white/50 font-body font-light text-base leading-relaxed">
-                  Transforming fleeting moments into <span className="italic text-white/80 font-medium">Eternal Cinematic Masterpieces</span>.
+                <p className="text-white/70 font-body font-light text-base leading-relaxed">
+                  Transforming fleeting moments into <span className="italic text-white font-medium">Eternal Cinematic Masterpieces</span>.
                 </p>
-                <p className="text-white/30 font-body font-light text-sm leading-relaxed">
+                <p className="text-white/40 font-body font-light text-sm leading-relaxed">
                   We don't just record; we curate your unique legacy with unmatched editorial precision and artistic soul.
                 </p>
               </div>
@@ -96,7 +87,6 @@ const Footer = () => {
             {[
               {
                 title: "Explore",
-                parallax: -50,
                 links: [
                   { label: "Our Portfolio", path: "/portfolio" },
                   { label: "Elite Services", path: "/services" },
@@ -105,8 +95,7 @@ const Footer = () => {
                 ]
               },
               {
-                title: "Cinemetics",
-                parallax: -80,
+                title: "Cinematics",
                 links: [
                   { label: "Wedding Stories", path: "/services" },
                   { label: "Cinematic Films", path: "/services" },
@@ -116,7 +105,6 @@ const Footer = () => {
               },
               {
                 title: "Connect",
-                parallax: -30,
                 links: [
                   { label: "Instagram", path: "#", icon: Instagram, color: "#E4405F" },
                   { label: "Facebook", path: "#", icon: Facebook, color: "#1877F2" },
@@ -127,21 +115,19 @@ const Footer = () => {
             ].map((col, idx) => (
               <motion.div
                 key={col.title}
-                custom={0.1 + idx * 0.1}
+                custom={0.2 + idx * 0.15}
                 initial="hidden"
                 whileInView="visible"
-                whileHover={{ y: -8, scale: 1.02 }}
-                viewport={{ once: true, margin: "-100px" }}
+                viewport={{ once: true, margin: "-50px" }}
                 variants={columnVariants}
-                style={{ y: useTransform(scrollYProgress, [0, 1], [0, col.parallax]) }}
-                className="p-8 md:p-10 bg-white/[0.01] backdrop-blur-xl border border-white/[0.03] rounded-[2.5rem] hover:bg-white/[0.03] hover:border-white/[0.1] transition-all duration-500 group shadow-lg cursor-pointer relative overflow-hidden"
+                className="p-8 md:p-10 bg-[#0A0A0F]/60 backdrop-blur-2xl border border-white/[0.03] rounded-[2.5rem] hover:-translate-y-2 hover:bg-[#0A0A0F]/90 hover:border-primary/30 hover:shadow-[0_15px_40px_hsl(var(--primary)_/_0.1)] transition-all duration-700 ease-out group cursor-pointer relative overflow-hidden"
               >
                 {/* Glimmer Reveal Animation */}
                 <motion.div 
                   initial={{ x: "-100%" }}
                   whileInView={{ x: "200%" }}
                   transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent skew-x-12 pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent skew-x-12 pointer-events-none"
                 />
 
                 <h4 className="text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-10 flex items-center gap-2">
@@ -151,25 +137,22 @@ const Footer = () => {
                 <ul className="space-y-5">
                   {col.links.map((link: any) => (
                     <li key={link.label}>
-                      <motion.a
+                      <a
                         href={link.path}
-                        initial={{ opacity: 0.4 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ margin: "-50px" }}
                         style={{ '--hover-color': link.color } as any}
-                        className="text-white/40 hover:text-white hover:translate-x-2 transition-all duration-500 text-sm font-body font-light flex items-center gap-3 w-fit group"
+                        className="text-white/40 hover:text-white hover:translate-x-2 transition-all duration-500 ease-out text-sm font-body font-light flex items-center gap-3 w-fit group/link"
                       >
                         {link.icon && (
                           <link.icon 
                             size={16} 
                             strokeWidth={1.5} 
-                            className="text-primary/60 group-hover:text-[var(--hover-color)] transition-all duration-500 flex-shrink-0" 
+                            className="text-primary/60 group-hover/link:text-[var(--hover-color)] transition-colors duration-500 flex-shrink-0" 
                           />
                         )}
                         <span className="relative">
                           {link.label}
                         </span>
-                      </motion.a>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -186,15 +169,15 @@ const Footer = () => {
           transition={{ duration: 1, delay: 0.6 }}
           className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-white/[0.05]"
         >
-          <div className="flex items-center gap-4 text-[10px] tracking-[0.3em] font-bold text-white/20 uppercase">
+          <div className="flex items-center gap-4 text-[10px] tracking-[0.3em] font-bold text-white/40 uppercase">
             <p>© {currentYear} PIXCEL STUDIO</p>
-            <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
-            <p>Mastering The Craft</p>
+            <div className="w-1.5 h-1.5 rounded-full bg-red-600/80 animate-pulse" />
+            <p className="text-primary/80">Mastering The Craft</p>
           </div>
           
-          <div className="flex gap-12 text-[10px] tracking-[0.2em] text-white/20 uppercase font-medium">
-            <a href="#" className="hover:text-primary transition-colors">Digital Integrity</a>
-            <a href="#" className="hover:text-primary transition-colors">Crafting Guidelines</a>
+          <div className="flex gap-12 text-[10px] tracking-[0.2em] text-white/30 uppercase font-medium">
+            <a href="#" className="hover:text-primary transition-colors duration-500">Digital Integrity</a>
+            <a href="#" className="hover:text-primary transition-colors duration-500">Crafting Guidelines</a>
           </div>
         </motion.div>
       </div>

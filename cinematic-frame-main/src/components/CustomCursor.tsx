@@ -85,9 +85,9 @@ const CustomCursor = () => {
             }}
             variants={variants}
             animate={cursorVariant}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
+            transition={{ ease: [0.22, 1, 0.36, 1], duration: 0.8}}
         >
-            <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-[#C6A15B] rounded-full -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-primary rounded-full -translate-x-1/2 -translate-y-1/2" />
         </motion.div>
     );
 };

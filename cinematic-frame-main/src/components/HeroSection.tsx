@@ -7,17 +7,26 @@ const slides = [
   {
     src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=2000&q=80",
     alt: "Moody Cinematic Couple Photography",
-    position: "object-center"
+    position: "object-center",
+    title: "Your Love Story,",
+    highlight: "Timeless & Cinematic",
+    description: "We craft cinematic visual narratives that capture the essence of your most precious moments."
   },
   {
     src: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=80",
     alt: "Dramatic Silhouette at Sunset",
-    position: "object-center"
+    position: "object-center",
+    title: "Artistic Elegance,",
+    highlight: "Captured with Grace",
+    description: "Every frame is meticulously composed to reflect the raw and authentic emotions of your day."
   },
   {
     src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=2000&q=80",
     alt: "Beautiful Dark Cinematic Wedding Detail",
-    position: "object-center"
+    position: "object-center",
+    title: "Unforgettable Moments,",
+    highlight: "A Masterpiece",
+    description: "Turning fleeting seconds into a lasting legacy of beautiful memories you can cherish forever."
   }
 ];
 
@@ -31,9 +40,9 @@ const HeroSection = React.memo(() => {
     offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+  // Use simple, hardware-accelerated parallax for a professional feel without lag
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -41,7 +50,7 @@ const HeroSection = React.memo(() => {
 
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(next, 5000);
+    const timer = setInterval(next, 3000);
     return () => clearInterval(timer);
   }, [isPaused, next]);
 
@@ -51,28 +60,28 @@ const HeroSection = React.memo(() => {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full bg-black overflow-hidden"
+      className="relative h-screen w-full bg-background overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <motion.div
-        style={{
-          scale: useTransform(scrollYProgress, [0, 1], [1, 0.9]),
-          borderRadius: useTransform(scrollYProgress, [0, 1], ["0px", "40px"]),
-        }}
+        style={{ y, opacity }}
         className="w-full h-full relative overflow-hidden origin-top"
       >
-        <motion.div style={{ y, opacity }} className="absolute inset-0 h-[120%] w-full">
+        <div className="absolute inset-0 h-[110%] w-full">
           <AnimatePresence mode="sync">
             <motion.div
               key={current}
-              initial={{ scale: 1.02, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.02, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0"
             >
-              <img
+              <motion.img
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 10, ease: "easeOut" }}
                 src={slides[current].src}
                 alt={slides[current].alt}
                 className={`w-full h-full object-cover ${slides[current].position}`}
@@ -80,43 +89,45 @@ const HeroSection = React.memo(() => {
                 decoding="async"
               />
               {/* Premium dark vignette exactly behind where text is */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/40 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-transparent pointer-events-none" />
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
 
         {/* Cinematic noise overlay */}
-        <div className="absolute inset-0 cinematic-overlay pointer-events-none mix-blend-overlay opacity-30" />
+        <div className="absolute inset-0 cinematic-overlay pointer-events-none mix-blend-overlay opacity-20" />
 
         {/* Hero content */}
-        <div className="absolute inset-0 flex flex-col items-start justify-end pb-24 md:pb-32 px-6 md:px-12 lg:px-24 pointer-events-none z-10 text-balance">
-          <motion.div
-            key={`text-${current}`} // triggers re-animation on slide change
-            style={{ y: textY }}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.05, ease: "easeOut" }}
-            className="text-left pointer-events-auto max-w-3xl"
-          >
-            <p className="text-xs tracking-luxury uppercase font-body mb-4 font-semibold drop-shadow-md text-[#C6A15B]">
-              Cinematic Wedding Photography
-            </p>
-            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight text-white drop-shadow-xl">
-              Your Love Story,
-              <br />
-              <span className="italic text-white/90">Timeless & Cinematic</span>
-            </h1>
-            <p className="font-body font-light text-sm md:text-base mb-10 max-w-lg text-white/80 drop-shadow-md">
-              We craft cinematic visual narratives that capture the essence of your most precious moments.
-            </p>
-            <Link
-              to="/quote"
-              className="inline-block border font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[12px] transition-all duration-300 hover:scale-[1.02] bg-transparent border-[#C6A15B] text-[#C6A15B] hover:bg-[#C6A15B] hover:text-black"
+        <div className="absolute inset-0 pointer-events-none z-10 text-balance overflow-hidden">
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={`text-${current}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute bottom-24 md:bottom-32 left-6 md:left-12 lg:left-24 pr-6 md:pr-12 lg:pr-24 text-left pointer-events-auto max-w-3xl"
             >
-              Get Your Quote
-            </Link>
-          </motion.div>
+              <p className="text-xs tracking-luxury uppercase font-body mb-4 font-semibold text-primary drop-shadow-md">
+                Cinematic Wedding Photography
+              </p>
+              <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight text-foreground drop-shadow-xl">
+                {slides[current].title}
+                <br />
+                <span className="italic text-white/90">{slides[current].highlight}</span>
+              </h1>
+              <p className="font-body font-light text-sm md:text-base mb-10 max-w-lg text-white/80 drop-shadow-md">
+                {slides[current].description}
+              </p>
+              <Link
+                to="/quote"
+                className="inline-block border font-body text-sm font-medium tracking-widest uppercase px-12 py-4 rounded-[8px] transition-all duration-500 ease-out hover:scale-105 bg-transparent border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                Get Your Quote
+              </Link>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </motion.div>
 
@@ -126,7 +137,7 @@ const HeroSection = React.memo(() => {
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`h-[2px] transition-all duration-300 rounded-full ${i === current ? "w-12 bg-primary shadow-[0_0_8px_rgba(198,161,91,0.5)]" : "w-6 bg-white/30 hover:bg-white/50"}`}
+            className={`h-[2px] transition-all duration-500 rounded-full ${i === current ? "w-12 bg-primary shadow-[0_0_12px_hsl(var(--primary))]" : "w-6 bg-white/30 hover:bg-white/50"}`}
           />
         ))}
       </div>
@@ -139,12 +150,12 @@ const HeroSection = React.memo(() => {
         className="absolute bottom-10 right-12 z-30 hidden md:flex flex-col items-center gap-4 cursor-pointer group"
         onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
       >
-        <span className="text-[9px] uppercase tracking-[0.4em] font-medium text-white/50 group-hover:text-[#C6A15B] transition-colors duration-500">
+        <span className="text-[9px] uppercase tracking-[0.4em] font-medium text-muted-foreground group-hover:text-primary transition-colors duration-500">
           Scroll
         </span>
         <div className="relative w-[1px] h-16 bg-white/10 overflow-hidden flex justify-center">
           <motion.div
-            className="absolute top-0 w-[2px] h-[40%] bg-gradient-to-b from-transparent via-[#C6A15B] to-[#C6A15B] blur-[0.5px]"
+            className="absolute top-0 w-[2px] h-[40%] bg-gradient-to-b from-transparent via-primary to-primary blur-[0.5px]"
             animate={{
               y: ["-100%", "300%"],
             }}

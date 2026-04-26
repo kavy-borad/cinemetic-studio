@@ -89,9 +89,9 @@ export const ServiceCard = ({
                 transition={{ duration: 0.12, ease: "easeOut" }}
                 className="h-full"
             >
-                <CinematicFrame className="h-full relative overflow-hidden group border border-[#1E1E26] hover:border-[#C6A15B]/50 transition-all duration-500 bg-[#121218] hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
+                <CinematicFrame className="h-full relative overflow-hidden group border border-[#1E1E26] hover:border-primary/50 transition-all duration-500 bg-[#121218] hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
                     {/* Radial Glow on Hover */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(198,161,91,0.08),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary) / 0.08),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                     <div className="p-12 h-full flex flex-col items-center justify-center text-center relative z-10">
                         <motion.h3
@@ -119,7 +119,7 @@ export const ServiceCard = ({
                                 <p className="text-sm text-muted-foreground font-light max-w-[200px] font-body">
                                     {description}
                                 </p>
-                                <ArrowUpRight className="text-[#C6A15B] w-5 h-5" />
+                                <ArrowUpRight className="text-primary w-5 h-5" />
                             </motion.div>
                         </div>
                     </div>

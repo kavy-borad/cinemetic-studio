@@ -35,10 +35,10 @@ const Navigation = ({ activePath }: NavigationProps) => {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ duration: 0.1, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${isScrolled
-        ? "bg-black/40 backdrop-blur-3xl border-b border-white/[0.05] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.8)]"
-        : "bg-gradient-to-b from-black/90 via-black/20 to-transparent"
+        ? "bg-black/20 backdrop-blur-[24px] saturate-150 border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+        : "bg-gradient-to-b from-black/80 via-black/10 to-transparent"
         }`}
     >
       {/* 3D Glass Unit Highlight */}

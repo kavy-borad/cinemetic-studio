@@ -47,7 +47,7 @@ const AlbumCard = ({
 
                     {/* Premium Glassmorphic Overlay on Hover */}
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center backdrop-blur-md">
-                        <span className="px-8 py-4 bg-transparent border border-[#C6A15B] text-[#C6A15B] tracking-[0.3em] font-medium text-xs uppercase transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 delay-100 hover:bg-[#C6A15B] hover:text-black hover:drop-shadow-[0_0_20px_rgba(198,161,91,0.5)]">
+                        <span className="px-8 py-4 bg-transparent border border-primary text-primary tracking-[0.3em] font-medium text-xs uppercase transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-700 delay-100 hover:bg-primary hover:text-black hover:drop-shadow-[0_0_20px_hsl(var(--primary) / 0.5)]">
                             View Story
                         </span>
                     </div>
@@ -55,13 +55,13 @@ const AlbumCard = ({
             </CinematicFrame>
 
             <div className="mt-6 text-center transform transition-transform duration-500 group-hover:-translate-y-2">
-                <h3 className="font-heading text-2xl md:text-3xl text-white group-hover:text-[#C6A15B] transition-colors duration-500 tracking-wide drop-shadow-md">
+                <h3 className="font-heading text-2xl md:text-3xl text-white group-hover:text-primary transition-colors duration-500 tracking-wide drop-shadow-md">
                     {title}
                 </h3>
                 <p className="text-white/50 text-[10px] md:text-xs tracking-[0.3em] uppercase mt-3 font-light">
                     {location} • {date}
                 </p>
-                <div className="h-[1px] w-0 group-hover:w-16 bg-[#C6A15B] mx-auto mt-4 transition-all duration-500 ease-out" />
+                <div className="h-[1px] w-0 group-hover:w-16 bg-primary mx-auto mt-4 transition-all duration-500 ease-out" />
             </div>
         </motion.div>
     );
@@ -121,7 +121,7 @@ const PortfolioCategory = () => {
                         transition={{ duration: 0.1, ease: "easeOut" }}
                         className="flex flex-col items-center w-full"
                     >
-                        <span className="text-[#C6A15B] text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
+                        <span className="text-primary text-sm md:text-base font-medium tracking-editorial uppercase mb-6 inline-block">
                             Portfolio
                         </span>
                         <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight leading-none text-center w-full capitalize">
@@ -136,7 +136,7 @@ const PortfolioCategory = () => {
                             initial={{ width: 0 }}
                             animate={{ width: "100px" }}
                             transition={{ duration: 0.1, delay: 0.15, ease: "circOut" }}
-                            className="h-px bg-[#C6A15B] opacity-60"
+                            className="h-px bg-primary opacity-60"
                         />
                     </motion.div>
                 </div>
@@ -148,7 +148,7 @@ const PortfolioCategory = () => {
                 {/* API Loading State */}
                 {isLoading && (
                     <div className="flex flex-col items-center justify-center py-24 gap-4">
-                        <div className="w-8 h-8 border-2 border-[#C6A15B] border-t-transparent rounded-full animate-spin" />
+                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         <p className="text-white/40 text-xs tracking-editorial uppercase">Loading from API...</p>
                     </div>
                 )}
